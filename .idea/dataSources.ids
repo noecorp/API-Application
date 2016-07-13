@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="MySQL - api_application@localhost" uuid="af9af845-5585-4e2a-a1d1-518dd3ab13da">
+    <database-info product="MySQL" version="5.6.27-log" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.35 ( Revision: 5fb9c5849535c13917c2cf9baaece6ef9693ef27 )">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower"/>
+    <schema name="" catalog="api_application"/>
+    <table name="application" schema="" catalog="api_application" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="author_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="maintainer_id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="title" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <column name="web" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <column name="slogan" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="application_ibfk_1" columns="author_id" ref-table="author" ref-schema="" ref-catalog="api_application" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="application_ibfk_2" columns="maintainer_id" ref-table="author" ref-schema="" ref-catalog="api_application" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="application_tag_application" table="application_tag" schema="" catalog="api_application" columns="application_id"/>
+      <index name="application_title" unique="false" columns="title"/>
+    </table>
+    <table name="application_tag" schema="" catalog="api_application" type="TABLE">
+      <column name="application_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="tag_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="application_id,tag_id"/>
+      <foreign-key name="application_tag_application" columns="application_id" ref-table="application" ref-schema="" ref-catalog="api_application" ref-columns="id" update-rule="3" delete-rule="0" deferrability="2"/>
+      <foreign-key name="application_tag_tag" columns="tag_id" ref-table="tag" ref-schema="" ref-catalog="api_application" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="application_tag_tag" unique="false" columns="tag_id"/>
+    </table>
+    <table name="author" schema="" catalog="api_application" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="name" sqlType="VARCHAR" precision="30" scale="0" nullable="false" jdbcType="12"/>
+      <column name="email" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="api_key" sqlType="VARCHAR" precision="32" scale="0" nullable="false" jdbcType="12"/>
+      <column name="password_hash" sqlType="LONGTEXT" precision="2147483647" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="status" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MA=="/>
+      <column name="created_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA=" version="true"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="application_ibfk_1" table="application" schema="" catalog="api_application" columns="author_id"/>
+      <exported-key name="application_ibfk_2" table="application" schema="" catalog="api_application" columns="maintainer_id"/>
+      <index name="email_index" unique="false" columns="email"/>
+    </table>
+    <table name="tag" schema="" catalog="api_application" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="name" sqlType="VARCHAR" precision="20" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="application_tag_tag" table="application_tag" schema="" catalog="api_application" columns="tag_id"/>
+    </table>
+    <table name="users" schema="" catalog="api_application" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="name" sqlType="VARCHAR" precision="250" scale="0" nullable="true" jdbcType="12"/>
+      <column name="email" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <column name="password_hash" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="api_key" sqlType="VARCHAR" precision="32" scale="0" nullable="false" jdbcType="12"/>
+      <column name="status" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" def="MQ=="/>
+      <column name="created_at" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA="/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="email" unique="true" columns="email"/>
+    </table>
+  </data-source>
+</component>

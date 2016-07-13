@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
+    <file url="file://$PROJECT_DIR$/libs/Slim" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/v1/.htaccess" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/v1/includes/functions/security_api.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/v1/includes/functions/set_headers.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/v1/includes/functions/utils.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/v1/includes/pass_hash.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/v1/index.php" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>
