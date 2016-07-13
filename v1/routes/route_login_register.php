@@ -32,15 +32,15 @@ $app->post('/login', function() use ($app) {
 
     $db = new DBManager();
 
-    $user = $db->entityManager->author("email = ?", $email)->fetch();
+    $author = $db->entityManager->author("email = ?", $email)->fetch();
 
-    if( $user != FALSE ) //false si l'email de l'author n'est pas trouvé
+    if( $author != FALSE ) //false si l'email de l'author n'est pas trouvé
     {
-        if (PassHash::check_password($user['password_hash'], $password))
+        if (PassHash::check_password($author['password_hash'], $password))
         {
-            $user = JSON::removeNode($user, "password_hash"); //remove password_hash column from $user
+            $user = JSON::removeNode($author, "password_hash"); //remove password_hash column from $user
             if($user["status"] == 0) //author activé
-                echoResponse(200, true, "Connexion réussie", $user); // Mot de passe utilisateur est correcte
+                echoResponse(200, true, "Connexion réussie", $author); // Mot de passe utilisateur est correcte
             else
                 echoResponse(200, false, "Votre compte a été suspendu", NULL); //author désactivé, status != 0
         }

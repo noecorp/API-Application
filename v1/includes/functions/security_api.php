@@ -5,6 +5,8 @@
 
 include_once "set_headers.php";
 
+require_once dirname(__DIR__)  . '/db_manager/dbManager.php';
+
 /**
  * Génération aléatoire unique MD5 String pour utilisateur clé Api
  */
@@ -22,28 +24,30 @@ function authenticate() {
 
     // Vérification de l'en-tête d'autorisation
     if (isset($headers['Authorization'])) {
-        $db = new DbUsers();
+        $db = new DBManager();
 
         $api_key = $headers['Authorization']; // Obtenir la clé d'api dans le header
-        //$api_key = 'f007baa2f665ef4c67c782df79ad1d93';
 
-        if (!$db->isValidApiKey($api_key)) // Valider la clé API
+        $isValidApiKey = $db->entityManager->author("api_key = ?", $api_key)->fetch();
+
+        if ($isValidApiKey == FALSE) // Valider la clé API - existe dans la base
         {
             global $app;
             echoResponse(401, false, "Accés Refusé. Clé API invalide", NULL);
             $app->stop();
         }
         else
+        if ($isValidApiKey != FALSE)
         {
             global $user_id;
-            $user_id = $db->getUserIdByApiKey($api_key); // Obtenir l'ID utilisateur (clé primaire)
+            $user_id = $isValidApiKey["id"]; // Obtenir l'ID utilisateur (clé primaire)
         }
     }
     else
     {
         // Clé API est absente dans la en-tête
         global $app;
-        echoResponse(400, false, "Vous ne pouvez pas accéder à cette ressource. Clé API absente", NULL);
+        echoResponse(400, false, "Vous ne pouvez pas accéder à cette ressource. Clé API absente dans l'en-tête", NULL);
         $app->stop();
     }
 }
