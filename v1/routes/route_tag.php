@@ -113,5 +113,5 @@ $app->delete('/tags/:id', 'authenticate', function($id) use ($app) {
     $db = new DBManager();
     $tag = $db->entityManager->tag[$id];
     if($tag && $tag->delete()) echoResponse(201, true, "Tag id : $id supprimé avec succès", NULL);
-    else echoResponse(400, false, "Erreur lors de la suppression de la tag ayant l'id $id !!", NULL);
+    else echoResponse(400, false, "Erreur lors de la suppression de la tag ayant l'id $id : tag inexistant !!", NULL);
 });
