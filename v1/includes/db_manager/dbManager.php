@@ -28,6 +28,7 @@ class DBManager
 
         $dsn = "mysql:dbname=$this->dbName;host=$this->host";
         $this->pdo = new PDO($dsn, $this->user, $this->password);
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         $this->entityManager = new NotORM($this->pdo); //$this->getEntityManager();
         $this->entityManager->debug = true;
@@ -38,7 +39,16 @@ class DBManager
      */
     public function getEntityManager()
     {
-        return new NotORM($this->pdo);
+
+        //$db = new NotORM($pdo, null, new NotORM_Cache_File("notorm.dat"));
+
+        $structure = new NotORM_Structure_Convention(
+            $primary = 'id',
+            $foreign = '%s_id',
+            $table = '%s'
+        );
+        //return new NotORM($this->pdo, $structure);
+        return new NotORM($this->pdo, null, new NotORM_Cache_File("notorm.dat"));
     }
 
 }

@@ -28,9 +28,9 @@ $app->get('/authors', 'authenticate', function() use ($app) {
     if(count($authors_array) > 0)
     {
         $data_authors = array();
-        foreach ($authors as $author) {
-            array_push($data_authors, $author);
-        }
+
+        foreach ($authors as $author) array_push($data_authors, JSON::removeNode($author, "password_hash"));
+
         echoResponse(200, true, "Tous les auteurs retournés", $data_authors);
     }
     else

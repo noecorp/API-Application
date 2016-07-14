@@ -26,6 +26,11 @@ class JSON
         return $json_array;
     }
 
+    /**
+     * Convert Notorm Object to array
+     * @param $object
+     * @return mixed
+     */
     static function parseNotormObjectToArray($object)
     {
         return json_decode(json_encode($object), true);

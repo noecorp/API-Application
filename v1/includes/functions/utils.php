@@ -6,6 +6,20 @@
 include_once "set_headers.php";
 
 /**
+ * Add a new [key] => [value] pair after a specific Associative Key in an Assoc Array
+ * @param $arr
+ * @param $key
+ * @param $val
+ * @param $index
+ * @return array
+ */
+function insterKeyValuePairInArray($arr, $key, $val, $index){
+    $arrayEnd = array_splice($arr, $index);
+    $arrayStart = array_splice($arr, 0, $index);
+    return (array_merge($arrayStart, array($key=>$val), $arrayEnd ));
+}
+
+/**
  * Vérification les params nécessaires posté ou non
  */
 function verifyRequiredParams($required_fields) {

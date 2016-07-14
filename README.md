@@ -1,3 +1,3 @@
 # API-Application
 
-Webservices use Slim Framework and Notorm 
+Webservices use Slim Framework and ORM Notorm 
