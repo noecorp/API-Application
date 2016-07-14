@@ -13,6 +13,7 @@ require_once dirname(__DIR__)  . '/includes/db_manager/dbManager.php';
 require_once dirname(__DIR__)  . '/includes/pass_hash.php';
 
 global $app;
+$db = new DBManager();
 
 /**
  * Login Utilisateur
@@ -20,7 +21,7 @@ global $app;
  * method - POST
  * @params email, password
  */
-$app->post('/login', function() use ($app) {
+$app->post('/login', function() use ($app, $db) {
     verifyRequiredParams(array('email', 'password')); // vérifier les paramètres requises
 
     //recupérer les valeurs POST
@@ -29,8 +30,6 @@ $app->post('/login', function() use ($app) {
     $password = $request_params["password"]; //$app->request()->post('email');
 
     validateEmail($email); // valider l'adresse email
-
-    $db = new DBManager();
 
     $author = $db->entityManager->author("email = ?", $email)->fetch();
 
@@ -57,7 +56,7 @@ $app->post('/login', function() use ($app) {
  * methode - POST
  * params - name, email, password
  */
-$app->post('/register', function() use ($app) {
+$app->post('/register', function() use ($app, $db) {
     verifyRequiredParams(array('name', 'email', 'password')); // vérifier les paramédtres requises
 
     // lecture des params de post
@@ -67,8 +66,6 @@ $app->post('/register', function() use ($app) {
     $password = $request_params['password']; //$app->request->post('password');
 
     validateEmail($email); //valider adresse email
-
-    $db = new DBManager();
 
     $author_exist = $db->entityManager->author("email = ?", $email)->fetch();
 
