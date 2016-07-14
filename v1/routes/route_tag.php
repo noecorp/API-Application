@@ -23,15 +23,14 @@ $app->get('/tags', 'authenticate', function() use ($app) {
     $db = new DBManager();
 
     $tags = $db->entityManager->tag();
-    $tags_array = json_decode(json_encode($tags), true);
+    $tags_array = JSON::parseNotormObjectToArray($tags);
 
     if(count($tags_array) > 0)
     {
         $data_tags = array();
-        foreach ($tags as $tag) {
-            array_push($data_tags, $tag);
-        }
-        echoResponse(200, true, "Tous les auteurs retournés", $data_tags);
+        foreach ($tags as $tag) array_push($data_tags, $tag);
+
+        echoResponse(200, true, "Tous les tags retournés", $data_tags);
     }
     else
         echoResponse(400, true, "Une erreur est survenue.", NULL);

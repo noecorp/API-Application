@@ -23,7 +23,7 @@ $app->get('/authors', 'authenticate', function() use ($app) {
     $db = new DBManager();
 
     $authors = $db->entityManager->author();
-    $authors_array = json_decode(json_encode($authors), true);
+    $authors_array = JSON::parseNotormObjectToArray($authors);
 
     if(count($authors_array) > 0)
     {

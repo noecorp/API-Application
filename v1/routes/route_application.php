@@ -15,15 +15,15 @@ require_once dirname(__DIR__)  . '/includes/pass_hash.php';
 global $app;
 
 /**
- * Get all application
- * url - /application
+ * Get all applications
+ * url - /applications
  * method - GET
  */
 $app->get('/applications', 'authenticate', function() use ($app) {
     $db = new DBManager();
 
     $applications = $db->entityManager->application();
-    $applications_array = json_decode(json_encode($applications), true);
+    $applications_array = JSON::parseNotormObjectToArray($applications);
 
     if(count($applications_array) > 0)
     {
@@ -40,7 +40,7 @@ $app->get('/applications', 'authenticate', function() use ($app) {
 
 /**
  * Get one application by id
- * url - /application/:id
+ * url - /applications/:id
  * method - GET
  */
 $app->get('/applications/:id', 'authenticate', function($id) use ($app) {
@@ -54,7 +54,7 @@ $app->get('/applications/:id', 'authenticate', function($id) use ($app) {
 
 /**
  * Create new application
- * url - /application/
+ * url - /applications
  * method - POST
  * @params name
  */
