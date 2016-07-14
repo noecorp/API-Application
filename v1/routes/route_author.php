@@ -13,15 +13,14 @@ require_once dirname(__DIR__)  . '/includes/db_manager/dbManager.php';
 require_once dirname(__DIR__)  . '/includes/pass_hash.php';
 
 global $app;
+$db = new DBManager();
 
 /**
  * Get all author
  * url - /authors
  * method - GET
  */
-$app->get('/authors', 'authenticate', function() use ($app) {
-    $db = new DBManager();
-
+$app->get('/authors', 'authenticate', function() use ($app, $db) {
     $authors = $db->entityManager->author();
     $authors_array = JSON::parseNotormObjectToArray($authors);
 
@@ -43,9 +42,7 @@ $app->get('/authors', 'authenticate', function() use ($app) {
  * url - /authors/:id
  * method - GET
  */
-$app->get('/authors/:id', 'authenticate', function($id) use ($app) {
-    $db = new DBManager();
-
+$app->get('/authors/:id', 'authenticate', function($id) use ($app, $db) {
     $authors = $db->entityManager->author[$id];
 
     if(count($authors) > 0) echoResponse(200, true, "L'author est retourné", $authors);

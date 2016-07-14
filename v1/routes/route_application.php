@@ -57,9 +57,7 @@ $app->get('/applications', 'authenticate', function() use ($app, $db) {
  * url - /applications/:id
  * method - GET
  */
-$app->get('/applications/:id', 'authenticate', function($id) use ($app) {
-    $db = new DBManager();
-
+$app->get('/applications/:id', 'authenticate', function($id) use ($app, $db) {
     $application = $db->entityManager->application[$id];
 
     if(count($application) > 0) echoResponse(200, true, "L'author est retourné", $application);
@@ -72,7 +70,7 @@ $app->get('/applications/:id', 'authenticate', function($id) use ($app) {
  * method - POST
  * @params title, web, slogan
  */
-$app->post('/applications', 'authenticate', function() use ($app) {
+$app->post('/applications', 'authenticate', function() use ($app, $db) {
     verifyRequiredParams(array('title', 'web', 'slogan')); // vérifier les paramétres requises
     global $user_id;
 
@@ -81,7 +79,6 @@ $app->post('/applications', 'authenticate', function() use ($app) {
     $request_params = insterKeyValuePairInArray($request_params, "author_id", $user_id, 0); //add key author_id to array params send to post, value equals to current $user_id
     $request_params = insterKeyValuePairInArray($request_params, "maintainer_id", $user_id, 1); //add key maintainer_id to array params send to post, value equals to current $user_id
 
-    $db = new DBManager();
     $insert_application = $db->entityManager->application()->insert($request_params);
 
     if($insert_application == FALSE) echoResponse(400, false, "Oops! Une erreur est survenue lors de l'insertion du application", NULL);
@@ -95,7 +92,7 @@ $app->post('/applications', 'authenticate', function() use ($app) {
  * method - PUT
  * @params title, web, slogan
  */
-$app->put('/applications/:id', 'authenticate', function($id) use ($app) {
+$app->put('/applications/:id', 'authenticate', function($id) use ($app, $db) {
     verifyRequiredParams(array('title', 'web', 'slogan')); // vérifier les paramétres requises
     global $user_id;
 
@@ -104,7 +101,6 @@ $app->put('/applications/:id', 'authenticate', function($id) use ($app) {
     $request_params = insterKeyValuePairInArray($request_params, "author_id", $user_id, 0); //add key author_id to array params send to post, value equals to current $user_id
     $request_params = insterKeyValuePairInArray($request_params, "maintainer_id", $user_id, 1); //add key maintainer_id to array params send to post, value equals to current $user_id
 
-    $db = new DBManager();
     $application = $db->entityManager->application[$id];
     if($application)
     {
@@ -125,8 +121,7 @@ $app->put('/applications/:id', 'authenticate', function($id) use ($app) {
  * method - DELETE
  * @params name
  */
-$app->delete('/applications/:id', 'authenticate', function($id) use ($app) {
-    $db = new DBManager();
+$app->delete('/applications/:id', 'authenticate', function($id) use ($app, $db) {
     $application = $db->entityManager->application[$id];
 
     if($db->entityManager->application_tag("application_id", $id)->delete())

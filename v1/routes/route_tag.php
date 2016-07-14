@@ -13,15 +13,14 @@ require_once dirname(__DIR__)  . '/includes/db_manager/dbManager.php';
 require_once dirname(__DIR__)  . '/includes/pass_hash.php';
 
 global $app;
+$db = new DBManager();
 
 /**
  * Get all tag
  * url - /tags
  * method - GET
  */
-$app->get('/tags', 'authenticate', function() use ($app) {
-    $db = new DBManager();
-
+$app->get('/tags', 'authenticate', function() use ($app, $db) {
     $tags = $db->entityManager->tag();
     $tags_array = JSON::parseNotormObjectToArray($tags);
 
@@ -42,9 +41,7 @@ $app->get('/tags', 'authenticate', function() use ($app) {
  * url - /tags/:id
  * method - GET
  */
-$app->get('/tags/:id', 'authenticate', function($id) use ($app) {
-    $db = new DBManager();
-
+$app->get('/tags/:id', 'authenticate', function($id) use ($app, $db) {
     $tag = $db->entityManager->tag[$id];
 
     if(count($tag) > 0) echoResponse(200, true, "L'author est retourné", $tag);
@@ -57,7 +54,7 @@ $app->get('/tags/:id', 'authenticate', function($id) use ($app) {
  * method - POST
  * @params name
  */
-$app->post('/tags', 'authenticate', function() use ($app) {
+$app->post('/tags', 'authenticate', function() use ($app, $db) {
     verifyRequiredParams(array('name')); // vérifier les paramédtres requises
     //global $author_id;
 
@@ -65,7 +62,6 @@ $app->post('/tags', 'authenticate', function() use ($app) {
     $request_params = json_decode($app->request()->getBody(), true);
     $name_tag = $request_params["name"]; //$app->request()->post('password');
 
-    $db = new DBManager();
     $insert_tag = $db->entityManager->tag()->insert(array("name" => $name_tag));
 
     if($insert_tag == FALSE) echoResponse(400, false, "Oops! Une erreur est survenue lors de l'insertion du tag", NULL);
@@ -79,7 +75,7 @@ $app->post('/tags', 'authenticate', function() use ($app) {
  * method - PUT
  * @params name
  */
-$app->put('/tags/:id', 'authenticate', function($id) use ($app) {
+$app->put('/tags/:id', 'authenticate', function($id) use ($app, $db) {
     verifyRequiredParams(array('name')); // vérifier les paramédtres requises
     //global $author_id;
 
@@ -87,7 +83,6 @@ $app->put('/tags/:id', 'authenticate', function($id) use ($app) {
     $request_params = json_decode($app->request()->getBody(), true);
     $name_tag = $request_params["name"]; //$app->request()->post('password');
 
-    $db = new DBManager();
     $tag = $db->entityManager->tag[$id];
     if($tag)
     {
@@ -108,8 +103,7 @@ $app->put('/tags/:id', 'authenticate', function($id) use ($app) {
  * method - DELETE
  * @params name
  */
-$app->delete('/tags/:id', 'authenticate', function($id) use ($app) {
-    $db = new DBManager();
+$app->delete('/tags/:id', 'authenticate', function($id) use ($app, $db) {
     $tag = $db->entityManager->tag[$id];
 
     if($db->entityManager->application_tag("tag_id", $id)->delete())
