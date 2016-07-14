@@ -13,22 +13,37 @@ require_once dirname(__DIR__)  . '/includes/db_manager/dbManager.php';
 require_once dirname(__DIR__)  . '/includes/pass_hash.php';
 
 global $app;
+$db = new DBManager();
 
 /**
  * Get all applications
  * url - /applications
  * method - GET
  */
-$app->get('/applications', 'authenticate', function() use ($app) {
-    $db = new DBManager();
+$app->get('/applications', 'authenticate', function() use ($app, $db) {
+    global $user_id;
 
-    $applications = $db->entityManager->application();
+    //$applications = $db->entityManager->application();
+    $applications = $db->entityManager->application("author_id", $user_id);
     $applications_array = JSON::parseNotormObjectToArray($applications);
 
     if(count($applications_array) > 0)
     {
         $data_applications = array();
-        foreach ($applications as $application) array_push($data_applications, $application);
+        foreach ($applications as $application)
+        {
+            $data_tag = array();
+            foreach ($application->application_tag() as $application_tag)
+            {
+                array_push($data_tag, array("id" => $application_tag->tag["id"], "name" => $application_tag->tag["name"]));
+            }
+            $application = JSON::parseNotormObjectToArray($application); //parse application to array
+            $application["tags"] = $data_tag; //add tags from array
+            //$application["author"] = $application->author();
+            //var_dump($application->author());
+
+            array_push($data_applications, $application);
+        }
 
         echoResponse(200, true, "Tous les applications retournés", $data_applications);
     }
@@ -105,7 +120,7 @@ $app->put('/applications/:id', 'authenticate', function($id) use ($app) {
 });
 
 /**
- * Delete one application
+ * Delete an application, need to delete from association table first
  * url - /applications/:id
  * method - DELETE
  * @params name
@@ -116,7 +131,9 @@ $app->delete('/applications/:id', 'authenticate', function($id) use ($app) {
 
     if($db->entityManager->application_tag("application_id", $id)->delete())
         if($application && $application->delete())
-            echoResponse(201, true, "Application id : $id supprimée avec succès", NULL);
+            echoResponse(200, true, "Application id : $id supprimée avec succès", NULL);
+        else
+            echoResponse(200, false, "Application id : $id n'a pa pu être supprimée", NULL);
     else
         echoResponse(400, false, "Erreur lors de la suppression de la application ayant l'id $id !!", NULL);
 });

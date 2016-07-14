@@ -18,7 +18,7 @@ global $app;
  * Login Utilisateur
  * url - /login
  * method - POST
- * params - email, password
+ * @params email, password
  */
 $app->post('/login', function() use ($app) {
     verifyRequiredParams(array('email', 'password')); // vérifier les paramètres requises
