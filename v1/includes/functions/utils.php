@@ -125,9 +125,12 @@ function buildMessageLog($user, $ressourceUri, $sql_query, $ip_request)
  * @param $state
  * @return mixed
  */
-function sendMessageLog($message_log, $state)
+function sendMessageLog($message_log, $state, $method)
 {
-    return insterKeyValuePairInArray($message_log, "error", $state, 0);
+    $message = $message_log;
+    $message = insterKeyValuePairInArray($message, "error", $state, 0);
+    $message = insterKeyValuePairInArray($message, "method", $method, 1);
+    return $message;
 }
 
 /**

@@ -148,7 +148,29 @@ $app->delete('/applications/:id', 'authenticate', function($id) use ($app, $db, 
     global $user_connected;
     $application = $db->entityManager->application[$id];
 
-    if($db->entityManager->application_tag("application_id", $id)->delete())
+    $application_tag = $db->entityManager->application_tag("application_id", $id)->fetch();
+
+    if($application_tag != FALSE)
+    {
+        if($db->entityManager->application_tag("application_id", $id)->delete())
+            if($application && $application->delete())
+            {
+                $logManager->setLog($user_connected, (string)$application, false);
+                echoResponse(200, true, "Application id : $id supprimée avec succès", NULL);
+            }
+            else
+            {
+                $logManager->setLog($user_connected, (string)$application, true);
+                echoResponse(200, false, "Application id : $id n'a pa pu être supprimée", NULL);
+            }
+        else
+        {
+            $logManager->setLog($user_connected, (string)$application, true);
+            echoResponse(400, false, "Erreur lors de la suppression de la application ayant l'id $id !!", NULL);
+        }
+    }
+    else if($application_tag == FALSE)
+    {
         if($application && $application->delete())
         {
             $logManager->setLog($user_connected, (string)$application, false);
@@ -159,9 +181,6 @@ $app->delete('/applications/:id', 'authenticate', function($id) use ($app, $db, 
             $logManager->setLog($user_connected, (string)$application, true);
             echoResponse(200, false, "Application id : $id n'a pa pu être supprimée", NULL);
         }
-    else
-    {
-        $logManager->setLog($user_connected, (string)$application, true);
-        echoResponse(400, false, "Erreur lors de la suppression de la application ayant l'id $id !!", NULL);
     }
+
 });
