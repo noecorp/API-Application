@@ -39,8 +39,9 @@ function authenticate() {
         else
         if ($isValidApiKey != FALSE)
         {
-            global $user_id;
+            global $user_id, $user_connected;
             $user_id = $isValidApiKey["id"]; // Obtenir l'ID utilisateur (clé primaire)
+            $user_connected = $isValidApiKey;
         }
     }
     else

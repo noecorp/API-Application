@@ -1,3 +1,81 @@
+Time : 14:19:01
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '11')","IP request":"::1"}
+
+Time : 14:18:52
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/tags","sql query":"SELECT * FROM tag","IP request":"::1"}
+
+Time : 14:18:36
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '11')","IP request":"10.2.150.245"}
+
+Time : 14:18:36
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '11')","IP request":"10.2.150.245"}
+
+Time : 14:18:18
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '11')","IP request":"10.2.150.245"}
+
+Time : 14:18:18
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '11')","IP request":"10.2.150.245"}
+
+Time : 14:17:54
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '11')","IP request":"10.2.150.245"}
+
+Time : 14:17:54
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '11')","IP request":"10.2.150.245"}
+
+Time : 14:17:27
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '11')","IP request":"10.2.150.245"}
+
+Time : 14:17:27
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '11')","IP request":"10.2.150.245"}
+
+Time : 14:15:57
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '11')","IP request":"10.2.150.245"}
+
+Time : 14:15:57
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '11')","IP request":"10.2.150.245"}
+
+Time : 14:13:20
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '11')","IP request":"10.2.150.245"}
+
+Time : 14:13:20
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '11')","IP request":"10.2.150.245"}
+
+Time : 14:12:52
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '11')","IP request":"10.2.150.245"}
+
+Time : 14:12:52
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '11')","IP request":"10.2.150.245"}
+
+Time : 14:10:57
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '11')","IP request":"10.2.150.245"}
+
+Time : 14:10:57
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '11')","IP request":"10.2.150.245"}
+
+Time : 14:10:38
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '11')","IP request":"10.2.150.245"}
+
+Time : 14:10:38
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '11')","IP request":"10.2.150.245"}
+
+Time : 14:04:23
+{"error":false,"user":{"id":"18","name":"Maddy Jeff"},"ressource":"\/login","sql query":"SELECT * FROM author WHERE (email = ?)","IP request":"10.2.150.235"}
+
+Time : 14:02:02
+{"error":false,"user":{"id":"18","name":"Maddy Jeff"},"ressource":"\/login","sql query":"SELECT * FROM author WHERE (email = ?)","IP request":"10.2.150.235"}
+
+Time : 14:01:39
+{"error":false,"user":{"id":"18","name":"Maddy Jeff"},"ressource":"\/login","sql query":"SELECT * FROM author WHERE (email = ?)","IP request":"10.2.150.235"}
+
+Time : 13:53:15
+{"error":false,"user":{"id":"15","name":"Tex com"},"ressource":"\/tags\/27","sql query":"27","IP request":"::1"}
+
+Time : 13:41:16
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/login","sql query":"SELECT * FROM author WHERE (email = ?)","IP request":"10.2.150.245"}
+
+Time : 13:31:39
+{"error":false,"user":{"id":"15","name":"Tex com"},"ressource":"\/tags\/24","sql query":"24","IP request":"::1"}
+
 Time : 13:15:00
 {"error":false,"user":null,"ressource":"\/register","sql query":"SELECT * FROM author WHERE (email = ?) \/ INSERT INTO author VALUES(ODL,odl@mail.com,6583cc5db3f2d2570df5925f15002526,$2a$10$245ac126640c65f74ededux1OKTAsomeeJMXt8f.uclqJ7Lrgx7v2)","IP request":"::1"}
 
