@@ -34,7 +34,8 @@ function verifyRequiredParams($required_fields) {
         $request_params = json_decode($app->request()->getBody(), true);
     }
     foreach ($required_fields as $field) {
-        if (!isset($request_params[$field]) || strlen(trim($request_params[$field])) <= 0) {
+        //if(!is_array($request_params[$field])) $strlen_values_fields = strlen(trim($request_params[$field])) <= 0;
+        if (!isset($request_params[$field])) {
             $error = true;
             $error_fields .= $field . ', ';
         }
@@ -124,9 +125,12 @@ function buildMessageLog($user, $ressourceUri, $sql_query, $ip_request)
  * @param $state
  * @return mixed
  */
-function sendMessageLog($message_log, $state)
+function sendMessageLog($message_log, $state, $method)
 {
-    return insterKeyValuePairInArray($message_log, "error", $state, 0);
+    $message = $message_log;
+    $message = insterKeyValuePairInArray($message, "error", $state, 0);
+    $message = insterKeyValuePairInArray($message, "method", $method, 1);
+    return $message;
 }
 
 /**

@@ -11,19 +11,20 @@ require_once dirname(__DIR__)  . '/includes/functions/json.php';
 require_once dirname(__DIR__)  . '/includes/functions/security_api.php';
 require_once dirname(__DIR__)  . '/includes/db_manager/dbManager.php';
 require_once dirname(__DIR__)  . '/includes/pass_hash.php';
+require_once dirname(__DIR__)  . '/includes/Log.class.php';
 
 global $app;
 $db = new DBManager();
+$logManager = new Log();
 
 /**
  * Get all applications
  * url - /applications
  * method - GET
  */
-$app->get('/applications', 'authenticate', function() use ($app, $db) {
-    global $user_id;
+$app->get('/applications', 'authenticate', function() use ($app, $db, $logManager) {
+    global $user_id, $user_connected;
 
-    //$applications = $db->entityManager->application();
     $applications = $db->entityManager->application("author_id", $user_id);
     $applications_array = JSON::parseNotormObjectToArray($applications);
 
@@ -39,12 +40,10 @@ $app->get('/applications', 'authenticate', function() use ($app, $db) {
             }
             $application = JSON::parseNotormObjectToArray($application); //parse application to array
             $application["tags"] = $data_tag; //add tags from array
-            //$application["author"] = $application->author();
-            //var_dump($application->author());
 
             array_push($data_applications, $application);
         }
-
+        $logManager->setLog($user_connected, (string)$applications, false);
         echoResponse(200, true, "Tous les applications retournés", $data_applications);
     }
     else
@@ -57,10 +56,15 @@ $app->get('/applications', 'authenticate', function() use ($app, $db) {
  * url - /applications/:id
  * method - GET
  */
-$app->get('/applications/:id', 'authenticate', function($id) use ($app, $db) {
+$app->get('/applications/:id', 'authenticate', function($id) use ($app, $db, $logManager) {
+    global $user_connected;
     $application = $db->entityManager->application[$id];
 
-    if(count($application) > 0) echoResponse(200, true, "L'author est retourné", $application);
+    if(count($application) > 0)
+    {
+        $logManager->setLog($user_connected, (string)$application, false);
+        echoResponse(200, true, "L'author est retourné", $application);
+    }
     else echoResponse(400, true, "Une erreur est survenue.", NULL);
 });
 
@@ -70,9 +74,9 @@ $app->get('/applications/:id', 'authenticate', function($id) use ($app, $db) {
  * method - POST
  * @params title, web, slogan
  */
-$app->post('/applications', 'authenticate', function() use ($app, $db) {
+$app->post('/applications', 'authenticate', function() use ($app, $db, $logManager) {
     verifyRequiredParams(array('title', 'web', 'slogan')); // vérifier les paramétres requises
-    global $user_id;
+    global $user_id, $user_connected;
 
     //recupérer les valeurs POST
     $request_params = json_decode($app->request()->getBody(), true);
@@ -81,9 +85,17 @@ $app->post('/applications', 'authenticate', function() use ($app, $db) {
 
     $insert_application = $db->entityManager->application()->insert($request_params);
 
-    if($insert_application == FALSE) echoResponse(400, false, "Oops! Une erreur est survenue lors de l'insertion du application", NULL);
+    if($insert_application == FALSE)
+    {
+        $logManager->setLog($user_connected, buildSqlQueryInsert("application", $request_params), true);
+        echoResponse(400, false, "Oops! Une erreur est survenue lors de l'insertion du application", NULL);
+    }
     else
-        if($insert_application != FALSE || is_array($insert_application)) echoResponse(201, true, "Application ajoutée avec succès", $insert_application);
+        if($insert_application != FALSE || is_array($insert_application))
+        {
+            $logManager->setLog($user_connected, buildSqlQueryInsert("application", $request_params), false);
+            echoResponse(201, true, "Application ajoutée avec succès", $insert_application);
+        }
 });
 
 /**
@@ -92,9 +104,9 @@ $app->post('/applications', 'authenticate', function() use ($app, $db) {
  * method - PUT
  * @params title, web, slogan
  */
-$app->put('/applications/:id', 'authenticate', function($id) use ($app, $db) {
+$app->put('/applications/:id', 'authenticate', function($id) use ($app, $db, $logManager) {
     verifyRequiredParams(array('title', 'web', 'slogan')); // vérifier les paramétres requises
-    global $user_id;
+    global $user_id, $user_connected;
 
     //recupérer les valeurs POST
     $request_params = json_decode($app->request()->getBody(), true);
@@ -106,12 +118,23 @@ $app->put('/applications/:id', 'authenticate', function($id) use ($app, $db) {
     {
         $update_application = $application->update($request_params);
 
-        if($update_application == FALSE) echoResponse(400, false, "Oops! Une erreur est survenue lors de la mise à jour du application", NULL);
+        if($update_application == FALSE)
+        {
+            $logManager->setLog($user_connected, (string)$application, true);
+            echoResponse(400, false, "Oops! Une erreur est survenue lors de la mise à jour du application", NULL);
+        }
         else
-            if($update_application != FALSE || is_array($update_application)) echoResponse(200, true, "Tag mis à jour avec succès. Id : $id", NULL);
+            if($update_application != FALSE || is_array($update_application))
+            {
+                $logManager->setLog($user_connected, (string)$application, false);
+                echoResponse(200, true, "Tag mis à jour avec succès. Id : $id", NULL);
+            }
     }
     else
+    {
+        $logManager->setLog($user_connected, (string)$application, true);
         echoResponse(400, false, "Tag inexistant !!", NULL);
+    }
 
 });
 
@@ -121,14 +144,43 @@ $app->put('/applications/:id', 'authenticate', function($id) use ($app, $db) {
  * method - DELETE
  * @params name
  */
-$app->delete('/applications/:id', 'authenticate', function($id) use ($app, $db) {
+$app->delete('/applications/:id', 'authenticate', function($id) use ($app, $db, $logManager) {
+    global $user_connected;
     $application = $db->entityManager->application[$id];
 
-    if($db->entityManager->application_tag("application_id", $id)->delete())
-        if($application && $application->delete())
-            echoResponse(200, true, "Application id : $id supprimée avec succès", NULL);
+    $application_tag = $db->entityManager->application_tag("application_id", $id)->fetch();
+
+    if($application_tag != FALSE)
+    {
+        if($db->entityManager->application_tag("application_id", $id)->delete())
+            if($application && $application->delete())
+            {
+                $logManager->setLog($user_connected, (string)$application, false);
+                echoResponse(200, true, "Application id : $id supprimée avec succès", NULL);
+            }
+            else
+            {
+                $logManager->setLog($user_connected, (string)$application, true);
+                echoResponse(200, false, "Application id : $id n'a pa pu être supprimée", NULL);
+            }
         else
+        {
+            $logManager->setLog($user_connected, (string)$application, true);
+            echoResponse(400, false, "Erreur lors de la suppression de la application ayant l'id $id !!", NULL);
+        }
+    }
+    else if($application_tag == FALSE)
+    {
+        if($application && $application->delete())
+        {
+            $logManager->setLog($user_connected, (string)$application, false);
+            echoResponse(200, true, "Application id : $id supprimée avec succès", NULL);
+        }
+        else
+        {
+            $logManager->setLog($user_connected, (string)$application, true);
             echoResponse(200, false, "Application id : $id n'a pa pu être supprimée", NULL);
-    else
-        echoResponse(400, false, "Erreur lors de la suppression de la application ayant l'id $id !!", NULL);
+        }
+    }
+
 });

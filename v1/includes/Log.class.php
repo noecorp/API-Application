@@ -81,7 +81,7 @@ class Log {
     public function setLog($user = null, $sqlQuery, $state = false)
     {
         $message_log = buildMessageLog($user, $this->app->request()->getResourceUri(), $sqlQuery, $this->app->request()->getIp()); //message log
-        $log = sendMessageLog($message_log, $state);
+        $log = sendMessageLog($message_log, $state, $this->app->request()->getMethod());
         exceptionLog($log);
     }
 }

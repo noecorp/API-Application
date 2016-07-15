@@ -1,9 +1,5 @@
 {
-  /*"require": {
-    "doctrine/orm": "2.5.*",
-    "symfony/yaml": "2.*"
-  },
-  "autoload": {
-    "psr-0": {"": "src/"}
-  }*/
+  "name" : "WS by Hery",
+  "author" : "Hery Rakotonarivo",
+  "description" : "Build with Slim framework and Notorm"
 }
