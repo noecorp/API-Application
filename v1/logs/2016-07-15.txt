@@ -1,3 +1,18 @@
+Time : 13:15:00
+{"error":false,"user":null,"ressource":"\/register","sql query":"SELECT * FROM author WHERE (email = ?) \/ INSERT INTO author VALUES(ODL,odl@mail.com,6583cc5db3f2d2570df5925f15002526,$2a$10$245ac126640c65f74ededux1OKTAsomeeJMXt8f.uclqJ7Lrgx7v2)","IP request":"::1"}
+
+Time : 11:25:55
+{"error":false,"user":{"id":"20","name":"Tex communication"},"ressource":"\/login","sql query":"SELECT * FROM author WHERE (email = ?)","IP request":"::1"}
+
+Time : 11:24:31
+{"error":false,"user":{"id":"20","name":"Tex communication"},"ressource":"\/login","sql query":"SELECT * FROM author WHERE (email = ?)","IP request":"::1"}
+
+Time : 11:19:48
+{"error":false,"user":null,"ressource":"\/register","sql query":"SELECT * FROM author WHERE (email = ?) \/ INSERT INTO author VALUES(Tex communication,texcom@mail.com,72ce9ce3b4235be04fc9a17acc2914a3,$2a$10$71138d790f04d93a6e699uh.1gbWt98ksSmkJ1wgU2y38InF3CcvO)","IP request":"::1"}
+
+Time : 11:19:41
+{"error":false,"user":null,"ressource":"\/register","sql query":"SELECT * FROM author WHERE (email = ?)","IP request":"::1"}
+
 Time : 11:09:56
 {"error":false,"user":null,"ressource":"\/register","sql query":"SELECT * FROM author WHERE (email = ?) \/ INSERT INTO author VALUES(Sly Rush,rush@mail.com,863396956013b9cb32891e13a0f99e12,$2a$10$021a1610ab4079615e941OBY3md6xAIbZ3Ysii4Z7QZ7QZ6NIWWAe)","IP request":"::1"}
 

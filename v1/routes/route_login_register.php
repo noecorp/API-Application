@@ -36,7 +36,7 @@ $app->post('/login', function() use ($app, $db, $logManager) {
     $author_query = $db->entityManager->author("email = ?", $email);
     $author = $author_query->fetch();
 
-    $message_log = buildMessageLog($author, $app->request()->getResourceUri(), (string)$author_query, $app->request()->getIp()); //message log
+    //$message_log = buildMessageLog($author, $app->request()->getResourceUri(), (string)$author_query, $app->request()->getIp()); //message log
 
     if( $author != FALSE ) //false si l'email de l'author n'est pas trouvé
     {
@@ -45,27 +45,33 @@ $app->post('/login', function() use ($app, $db, $logManager) {
             $user = JSON::removeNode($author, "password_hash"); //remove password_hash column from $user
             if($user["status"] == 0) //author activé
             {
-                $log = sendMessageLog($message_log, false);
-                echoResponseWithLog(200, true, "Connexion réussie", $author, $log); // Mot de passe utilisateur est correcte
-                //echoResponse(200, true, "Connexion réussie", $author); // Mot de passe utilisateur est correcte
+                //$log = sendMessageLog($message_log, false);
+                //echoResponseWithLog(200, true, "Connexion réussie", $author, $log); // Mot de passe utilisateur est correcte
+                $logManager->setLog($author, (string)$author_query, false);
+                echoResponse(200, true, "Connexion réussie", $author); // Mot de passe utilisateur est correcte
             }
             else
             {
-                $log = sendMessageLog($message_log, true);
-                echoResponseWithLog(200, true, "Connexion réussie", $author, $log); // Mot de passe utilisateur est correcte
-                //echoResponse(200, false, "Votre compte a été suspendu", NULL); //author désactivé, status != 0
+                //$log = sendMessageLog($message_log, true);
+                //echoResponseWithLog(200, true, "Connexion réussie", $author, $log); // Mot de passe utilisateur est correcte
+                $logManager->setLog($author, (string)$author_query, true);
+                echoResponse(200, true, "Connexion réussie", $author); // Mot de passe utilisateur est correcte
             }
         }
         else
         {
-            $log = sendMessageLog($message_log, true);
-            echoResponseWithLog(200, false, "Mot de passe incorrecte", NULL, $log); // erreur inconnue est survenue
+            //$log = sendMessageLog($message_log, true);
+            //echoResponseWithLog(200, false, "Mot de passe incorrecte", NULL, $log); // erreur inconnue est survenue
+            $logManager->setLog($author, (string)$author_query, true);
+            echoResponseWithLog(200, false, "Mot de passe incorrecte", NULL); // erreur inconnue est survenue
         }
     }
     else
     {
-        $log = sendMessageLog($message_log, true);
-        echoResponseWithLog(200, false, "Echec de la connexion. identificateurs incorrectes", NULL, $log); // identificateurs de l'utilisateur sont erronés
+        //$log = sendMessageLog($message_log, true);
+        //echoResponseWithLog(200, false, "Echec de la connexion. identificateurs incorrectes", NULL, $log); // identificateurs de l'utilisateur sont erronés
+        $logManager->setLog($author, (string)$author_query, true);
+        echoResponse(200, false, "Echec de la connexion. identificateurs incorrectes", NULL); // identificateurs de l'utilisateur sont erronés
     }
 });
 
@@ -80,9 +86,9 @@ $app->post('/register', function() use ($app, $db, $logManager) {
 
     // lecture des params de post
     $request_params = json_decode($app->request()->getBody(), true);
-    $name = $request_params['name']; //$app->request->post('name');
-    $email = $request_params['email']; //$app->request->post('email');
-    $password = $request_params['password']; //$app->request->post('password');
+    $name = $request_params['name'];
+    $email = $request_params['email'];
+    $password = $request_params['password'];
 
     validateEmail($email); //valider adresse email
 
@@ -102,23 +108,23 @@ $app->post('/register', function() use ($app, $db, $logManager) {
         
         if($insert_author == FALSE)
         {
-            $message_log = buildMessageLog(null, $app->request()->getResourceUri(), (string)$author_exist_query . " / " . buildSqlQueryInsert("author", $data), $app->request()->getIp()); //message log
-            $log = sendMessageLog($message_log, true);
+            //$message_log = buildMessageLog(null, $app->request()->getResourceUri(), (string)$author_exist_query . " / " . buildSqlQueryInsert("author", $data), $app->request()->getIp()); //message log
+            //$log = sendMessageLog($message_log, true);
+            //echoResponseWithLog(400, false, "Oops! Une erreur est survenue lors de l'inscription", NULL, $log);
 
-            //$logManager->setLog(null, (string)$author_exist_query . " / " . buildSqlQueryInsert("author", $data), true);
-
-            echoResponseWithLog(400, false, "Oops! Une erreur est survenue lors de l'inscription", NULL, $log);
-            //echoResponse(400, false, "Oops! Une erreur est survenue lors de l'inscription", NULL);
+            $logManager->setLog(null, (string)$author_exist_query . " / " . buildSqlQueryInsert("author", $data), true);
+            echoResponse(400, false, "Oops! Une erreur est survenue lors de l'inscription", NULL);
         }
         else
         {
             if($insert_author != FALSE || is_array($insert_author))
             {
-                $message_log = buildMessageLog(null, $app->request()->getResourceUri(), (string)$author_exist_query . " / " . buildSqlQueryInsert("author", $data), $app->request()->getIp()); //message log
-                $log = sendMessageLog($message_log, false);
-                //$logManager->setLog(null, (string)$author_exist_query . " / " . buildSqlQueryInsert("author", $data), false);
+                //$message_log = buildMessageLog(null, $app->request()->getResourceUri(), (string)$author_exist_query . " / " . buildSqlQueryInsert("author", $data), $app->request()->getIp()); //message log
+                //$log = sendMessageLog($message_log, false);
+                //echoResponseWithLog(201, true, "Author inscrit avec succès", $insert_author, $log);
 
-                echoResponseWithLog(201, true, "Author inscrit avec succès", $insert_author, $log);
+                $logManager->setLog(null, (string)$author_exist_query . " / " . buildSqlQueryInsert("author", $data), false);
+                echoResponse(201, true, "Author inscrit avec succès", $insert_author);
             }
         }
     }
@@ -126,12 +132,12 @@ $app->post('/register', function() use ($app, $db, $logManager) {
     {
         if($author_exist != FALSE || count($author_exist) > 1)
         {
-            $message_log = buildMessageLog(null, $app->request()->getResourceUri(), (string)$author_exist_query, $app->request()->getIp()); //message log
-            $log = sendMessageLog($message_log, false);
-            //$logManager->setLog(null, (string)$author_exist_query, false);
+            //$message_log = buildMessageLog(null, $app->request()->getResourceUri(), (string)$author_exist_query, $app->request()->getIp()); //message log
+            //$log = sendMessageLog($message_log, false);
+            //echoResponseWithLog(400, false, "Désolé, cet E-mail éxiste déja", NULL, $log);
 
-            echoResponseWithLog(400, false, "Désolé, cet E-mail éxiste déja", NULL, $log);
-            //echoResponse(400, false, "Désolé, cet E-mail éxiste déja", NULL);
+            $logManager->setLog(null, (string)$author_exist_query, false);
+            echoResponse(400, false, "Désolé, cet E-mail éxiste déja", NULL);
         }
     }
 });
