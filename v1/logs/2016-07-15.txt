@@ -1,0 +1,50 @@
+Time : 11:09:56
+{"error":false,"user":null,"ressource":"\/register","sql query":"SELECT * FROM author WHERE (email = ?) \/ INSERT INTO author VALUES(Sly Rush,rush@mail.com,863396956013b9cb32891e13a0f99e12,$2a$10$021a1610ab4079615e941OBY3md6xAIbZ3Ysii4Z7QZ7QZ6NIWWAe)","IP request":"::1"}
+
+Time : 10:34:17
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/login","sql query":"SELECT * FROM author WHERE (email = ?)","IP request":"10.2.150.245"}
+
+Time : 10:12:02
+{"error":false,"user":{"id":"18","name":"Maddy Jeff"},"ressource":"\/login","sql query":"SELECT * FROM author WHERE (email = ?)","IP request":"10.2.150.245"}
+
+Time : 10:10:32
+{"error":false,"user":{"id":"18","name":"Maddy Jeff"},"ressource":"\/login","sql query":"SELECT * FROM author WHERE (email = ?)","IP request":"10.2.150.245"}
+
+Time : 10:10:24
+{"error":true,"user":{"id":"18","name":"Maddy Jeff"},"ressource":"\/login","sql query":"SELECT * FROM author WHERE (email = ?)","IP request":"10.2.150.245"}
+
+Time : 09:48:26
+{"error":false,"user":null,"ressource":"\/register","sql query":"SELECT * FROM author WHERE (email = ?) \/ INSERT INTO author VALUES(Maddy Jeff,jeff@mail.com,b006f6f8eb70fcb9343372426c93e126,$2a$10$5f1001267153aea1c0885ujr55r\/fD71g\/CD9h\/ErbQzwQq2kTDaW)","IP request":"::1"}
+
+Time : 09:26:44
+{"error":false,"user":{"id":null,"name":null},"ressource":"\/register","sql query":" \/ 16","IP request":"::1"}
+
+Time : 09:02:38
+{"error":false,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/login","sql query":"SELECT * FROM author WHERE (email = ?)","IP request":"::1"}
+
+Time : 09:02:03
+{"error":true,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/login","sql query":"SELECT * FROM author WHERE (email = ?)","IP request":"10.2.150.245"}
+
+Time : 09:00:45
+{"error":true,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/login","sql query":"SELECT * FROM author WHERE (email = ?)","IP request":"10.2.150.245"}
+
+Time : 08:58:00
+{"error":true,"user":{"id":"11","name":"Jakub Vrana"},"ressource":"\/login","sql query":"SELECT * FROM author WHERE (email = ?)","IP request":"::1"}
+
+Time : 08:55:29
+{"error":true,"user":{"id":"11","name":"Jakub Vrana","email":"jakub@mail.com","api_key":"d116f4d76eb945f02cc0c36a2f082f94","password_hash":"$2a$10$2369e48260a538e80e1ede\/t07R7856KXp8WRVeIk3cQzUJryGE\/2","status":"0","created_at":"2016-07-12 15:29:26"},"root uri":"\/API-Application\/v1\/login","sql":"SELECT * FROM author WHERE (email = ?)","IP request":"::1"}
+
+Time : 08:52:20
+{"error":true,"user":{"id":"11","name":"Jakub Vrana","email":"jakub@mail.com","api_key":"d116f4d76eb945f02cc0c36a2f082f94","password_hash":"$2a$10$2369e48260a538e80e1ede\/t07R7856KXp8WRVeIk3cQzUJryGE\/2","status":"0","created_at":"2016-07-12 15:29:26"},"root uri":"\/API-Application\/v1\/login","sql":"SELECT * FROM author WHERE (email = ?)","IP request":"::1"}
+
+Time : 08:47:39
+{"error":true,"user":{"id":"11","name":"Jakub Vrana","email":"jakub@mail.com","api_key":"d116f4d76eb945f02cc0c36a2f082f94","password_hash":"$2a$10$2369e48260a538e80e1ede\/t07R7856KXp8WRVeIk3cQzUJryGE\/2","status":"0","created_at":"2016-07-12 15:29:26"},"ressource":"\/login","sql":"11"}
+
+Time : 08:43:29
+{"error":true,"user":{"id":"11","name":"Jakub Vrana","email":"jakub@mail.com","api_key":"d116f4d76eb945f02cc0c36a2f082f94","password_hash":"$2a$10$2369e48260a538e80e1ede\/t07R7856KXp8WRVeIk3cQzUJryGE\/2","status":"0","created_at":"2016-07-12 15:29:26"},"route":"\/login","sql":"11"}
+
+Time : 08:42:30
+{"error":true,"user":{"id":"11","name":"Jakub Vrana","email":"jakub@mail.com","api_key":"d116f4d76eb945f02cc0c36a2f082f94","password_hash":"$2a$10$2369e48260a538e80e1ede\/t07R7856KXp8WRVeIk3cQzUJryGE\/2","status":"0","created_at":"2016-07-12 15:29:26"},"route":"\/login","sql":"11"}
+
+Time : 08:41:19
+{"error":true,"user":{"id":"11","name":"Jakub Vrana","email":"jakub@mail.com","api_key":"d116f4d76eb945f02cc0c36a2f082f94","password_hash":"$2a$10$2369e48260a538e80e1ede\/t07R7856KXp8WRVeIk3cQzUJryGE\/2","status":"0","created_at":"2016-07-12 15:29:26"},"route":"\/login","sql":"11"}
