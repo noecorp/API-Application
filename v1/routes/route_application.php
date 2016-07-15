@@ -47,7 +47,10 @@ $app->get('/applications', 'authenticate', function() use ($app, $db, $logManage
         echoResponse(200, true, "Tous les applications retournés", $data_applications);
     }
     else
-        echoResponse(400, true, "Une erreur est survenue.", NULL);
+    {
+        $logManager->setLog($user_connected, (string)$applications, true);
+        echoResponse(400, false, "Une erreur est survenue.", NULL);
+    }
 
 });
 
@@ -65,7 +68,11 @@ $app->get('/applications/:id', 'authenticate', function($id) use ($app, $db, $lo
         $logManager->setLog($user_connected, (string)$application, false);
         echoResponse(200, true, "L'author est retourné", $application);
     }
-    else echoResponse(400, true, "Une erreur est survenue.", NULL);
+    else
+    {
+        $logManager->setLog($user_connected, (string)$application, false);
+        echoResponse(400, true, "Une erreur est survenue.", NULL);
+    }
 });
 
 /**
@@ -135,7 +142,6 @@ $app->put('/applications/:id', 'authenticate', function($id) use ($app, $db, $lo
         $logManager->setLog($user_connected, (string)$application, true);
         echoResponse(400, false, "Tag inexistant !!", NULL);
     }
-
 });
 
 /**
@@ -182,5 +188,4 @@ $app->delete('/applications/:id', 'authenticate', function($id) use ($app, $db, 
             echoResponse(200, false, "Application id : $id n'a pa pu être supprimée", NULL);
         }
     }
-
 });
