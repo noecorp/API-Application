@@ -4,6 +4,7 @@
  */
 
 include_once "set_headers.php";
+require_once dirname(__DIR__) . '/Log.class.php';
 
 /**
  * Add a new [key] => [value] pair after a specific Associative Key in an Assoc Array
@@ -76,4 +77,84 @@ function echoResponse($status_code, $state, $message, $data) {
     $response["records"] = $data;
 
     echo utf8_encode(json_encode($response));
+}
+
+/**
+ * Faisant écho à la réponse JSON au client et écriture dans le log
+ * @param String $status_code  Code de réponse HTTP
+ * @param Int $response response Json
+ */
+function echoResponseWithLog($status_code, $state, $message, $data, $log = array()) {
+    global $app;
+
+    $app->status($status_code); // Code de réponse HTTP
+
+    $app->contentType('application/json'); // la mise en réponse type de contenu en JSON
+
+    $response = array();
+    $response["result"]["state"] = $state;
+    $response["result"]["message"] = $message;
+    $response["records"] = $data;
+
+    echo utf8_encode(json_encode($response));
+
+    if(count($log) > 0) exceptionLog($log); else return; //Write into log
+}
+
+/**
+ * Build message log
+ * @param $user
+ * @param $ressourceUri
+ * @param $sql_query
+ * @return mixed
+ */
+function buildMessageLog($user, $ressourceUri, $sql_query, $ip_request)
+{
+    $message_log["user"] = is_null($user) ? NULL : array("id" => $user["id"], "name" => $user["name"]);
+    $message_log["ressource"] = $ressourceUri;
+    $message_log["sql query"] = $sql_query;
+    $message_log["IP request"] = $ip_request;
+
+    return $message_log;
+}
+
+/**
+ * Send message log with state
+ * @param $message_log
+ * @param $state
+ * @return mixed
+ */
+function sendMessageLog($message_log, $state)
+{
+    return insterKeyValuePairInArray($message_log, "error", $state, 0);
+}
+
+/**
+ * Writes the log and returns the exception
+ *
+ * @param  string $message
+ * @return string
+ */
+function exceptionLog($message)
+{
+    $log = new Log();
+    $log->write(utf8_encode(json_encode($message))); #Write into log
+}
+
+/**
+ * Build sql query insert need to get sql query on writing into log
+ * @param $nameTable
+ * @param $values
+ * @return string
+ */
+function buildSqlQueryInsert($nameTable, $values)
+{
+    $values_sql = "";
+    foreach ($values as $key => $value) {
+        $values_sql .= $value . ",";
+    }
+    $values_sql = rtrim($values_sql, ","); //delete last ','
+
+    return "INSERT INTO $nameTable VALUES($values_sql)";
+
 }

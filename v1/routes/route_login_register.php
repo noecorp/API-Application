@@ -11,9 +11,11 @@ require_once dirname(__DIR__)  . '/includes/functions/json.php';
 require_once dirname(__DIR__)  . '/includes/functions/security_api.php';
 require_once dirname(__DIR__)  . '/includes/db_manager/dbManager.php';
 require_once dirname(__DIR__)  . '/includes/pass_hash.php';
+require_once dirname(__DIR__)  . '/includes/Log.class.php';
 
 global $app;
 $db = new DBManager();
+$logManager = new Log();
 
 /**
  * Login Utilisateur
@@ -21,7 +23,7 @@ $db = new DBManager();
  * method - POST
  * @params email, password
  */
-$app->post('/login', function() use ($app, $db) {
+$app->post('/login', function() use ($app, $db, $logManager) {
     verifyRequiredParams(array('email', 'password')); // vérifier les paramètres requises
 
     //recupérer les valeurs POST
@@ -31,7 +33,10 @@ $app->post('/login', function() use ($app, $db) {
 
     validateEmail($email); // valider l'adresse email
 
-    $author = $db->entityManager->author("email = ?", $email)->fetch();
+    $author_query = $db->entityManager->author("email = ?", $email);
+    $author = $author_query->fetch();
+
+    $message_log = buildMessageLog($author, $app->request()->getResourceUri(), (string)$author_query, $app->request()->getIp()); //message log
 
     if( $author != FALSE ) //false si l'email de l'author n'est pas trouvé
     {
@@ -39,15 +44,29 @@ $app->post('/login', function() use ($app, $db) {
         {
             $user = JSON::removeNode($author, "password_hash"); //remove password_hash column from $user
             if($user["status"] == 0) //author activé
-                echoResponse(200, true, "Connexion réussie", $author); // Mot de passe utilisateur est correcte
+            {
+                $log = sendMessageLog($message_log, false);
+                echoResponseWithLog(200, true, "Connexion réussie", $author, $log); // Mot de passe utilisateur est correcte
+                //echoResponse(200, true, "Connexion réussie", $author); // Mot de passe utilisateur est correcte
+            }
             else
-                echoResponse(200, false, "Votre compte a été suspendu", NULL); //author désactivé, status != 0
+            {
+                $log = sendMessageLog($message_log, true);
+                echoResponseWithLog(200, true, "Connexion réussie", $author, $log); // Mot de passe utilisateur est correcte
+                //echoResponse(200, false, "Votre compte a été suspendu", NULL); //author désactivé, status != 0
+            }
         }
         else
-            echoResponse(200, false, "Mot de passe incorrecte", NULL); // erreur inconnue est survenue
+        {
+            $log = sendMessageLog($message_log, true);
+            echoResponseWithLog(200, false, "Mot de passe incorrecte", NULL, $log); // erreur inconnue est survenue
+        }
     }
     else
-        echoResponse(200, false, "Echec de la connexion. identificateurs incorrectes", NULL); // identificateurs de l'utilisateur sont erronés
+    {
+        $log = sendMessageLog($message_log, true);
+        echoResponseWithLog(200, false, "Echec de la connexion. identificateurs incorrectes", NULL, $log); // identificateurs de l'utilisateur sont erronés
+    }
 });
 
 /**
@@ -56,7 +75,7 @@ $app->post('/login', function() use ($app, $db) {
  * methode - POST
  * params - name, email, password
  */
-$app->post('/register', function() use ($app, $db) {
+$app->post('/register', function() use ($app, $db, $logManager) {
     verifyRequiredParams(array('name', 'email', 'password')); // vérifier les paramédtres requises
 
     // lecture des params de post
@@ -67,6 +86,7 @@ $app->post('/register', function() use ($app, $db) {
 
     validateEmail($email); //valider adresse email
 
+    $author_exist_query = $db->entityManager->author("email = ?", $email);
     $author_exist = $db->entityManager->author("email = ?", $email)->fetch();
 
     if($author_exist == FALSE) //email author doesn't exist
@@ -79,11 +99,39 @@ $app->post('/register', function() use ($app, $db) {
         );
 
         $insert_author = $db->entityManager->author()->insert($data);
+        
+        if($insert_author == FALSE)
+        {
+            $message_log = buildMessageLog(null, $app->request()->getResourceUri(), (string)$author_exist_query . " / " . buildSqlQueryInsert("author", $data), $app->request()->getIp()); //message log
+            $log = sendMessageLog($message_log, true);
 
-        if($insert_author == FALSE) echoResponse(400, false, "Oops! Une erreur est survenue lors de l'inscription", NULL);
+            //$logManager->setLog(null, (string)$author_exist_query . " / " . buildSqlQueryInsert("author", $data), true);
+
+            echoResponseWithLog(400, false, "Oops! Une erreur est survenue lors de l'inscription", NULL, $log);
+            //echoResponse(400, false, "Oops! Une erreur est survenue lors de l'inscription", NULL);
+        }
         else
-        if($insert_author != FALSE || is_array($insert_author)) echoResponse(201, true, "Author inscrit avec succès", $insert_author);
+        {
+            if($insert_author != FALSE || is_array($insert_author))
+            {
+                $message_log = buildMessageLog(null, $app->request()->getResourceUri(), (string)$author_exist_query . " / " . buildSqlQueryInsert("author", $data), $app->request()->getIp()); //message log
+                $log = sendMessageLog($message_log, false);
+                //$logManager->setLog(null, (string)$author_exist_query . " / " . buildSqlQueryInsert("author", $data), false);
+
+                echoResponseWithLog(201, true, "Author inscrit avec succès", $insert_author, $log);
+            }
+        }
     }
     else
-    if($author_exist != FALSE || count($author_exist) > 1) echoResponse(400, false, "Désolé, cet E-mail éxiste déja", NULL);
+    {
+        if($author_exist != FALSE || count($author_exist) > 1)
+        {
+            $message_log = buildMessageLog(null, $app->request()->getResourceUri(), (string)$author_exist_query, $app->request()->getIp()); //message log
+            $log = sendMessageLog($message_log, false);
+            //$logManager->setLog(null, (string)$author_exist_query, false);
+
+            echoResponseWithLog(400, false, "Désolé, cet E-mail éxiste déja", NULL, $log);
+            //echoResponse(400, false, "Désolé, cet E-mail éxiste déja", NULL);
+        }
+    }
 });
