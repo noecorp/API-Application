@@ -1,3 +1,9 @@
+Time : 16:35:50
+{"error":false,"method":"POST","user":{"id":"18","name":"Maddy Jeff"},"ressource":"\/application_tags\/13","sql query":"INSERT INTO application_tag VALUES(13,27)","IP request":"::1"}
+
+Time : 16:35:50
+{"error":false,"method":"POST","user":{"id":"18","name":"Maddy Jeff"},"ressource":"\/application_tags\/13","sql query":"INSERT INTO application_tag VALUES(13,26)","IP request":"::1"}
+
 Time : 16:26:42
 {"error":false,"method":"DELETE","user":{"id":"18","name":"Maddy Jeff"},"ressource":"\/applications\/7","sql query":"7","IP request":"10.2.150.245"}
 

@@ -23,8 +23,8 @@ $logManager = new Log();
  * method - POST
  * @params id_application, id_tags
  */
-$app->post('/application_tags', 'authenticate', function() use ($app, $db, $logManager) {
-    verifyRequiredParams(array('application_id', 'tags_id')); // vérifier les paramétres requises
+$app->post('/application_tags/:id_application', 'authenticate', function($id_application) use ($app, $db, $logManager) {
+    verifyRequiredParams(array('tags_id')); // vérifier les paramétres requises
     global $user_connected;
 
     //recupérer les valeurs POST
@@ -35,7 +35,7 @@ $app->post('/application_tags', 'authenticate', function() use ($app, $db, $logM
     foreach ($request_params["tags_id"] as $tag_app)
     {
         $data = array(
-            "application_id" => $request_params["application_id"],
+            "application_id" => $id_application,
             "tag_id" => $tag_app["id"]
         );
 
