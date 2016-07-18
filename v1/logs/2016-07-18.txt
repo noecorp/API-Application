@@ -1,3 +1,12 @@
+Time : 16:48:14
+{"error":false,"method":"GET","user":{"id":"18","name":"Maddy Jeff"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '18')","IP request":"10.2.150.245"}
+
+Time : 16:34:48
+{"error":false,"method":"GET","user":{"id":"18","name":"Maddy Jeff"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '18')","IP request":"10.2.150.239"}
+
+Time : 16:34:48
+{"error":false,"method":"GET","user":{"id":"18","name":"Maddy Jeff"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '18')","IP request":"10.2.150.239"}
+
 Time : 16:18:02
 {"error":false,"method":"GET","user":{"id":"18","name":"Maddy Jeff"},"ressource":"\/applications","sql query":"SELECT * FROM application WHERE (author_id = '18')","IP request":"10.2.150.245"}
 

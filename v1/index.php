@@ -13,7 +13,7 @@ require_once 'routes/route_application.php';
 require_once 'routes/route_application_tag.php';
 require_once 'routes/route_author.php';
 require_once 'routes/route_tag.php';
-require_once 'routes/route_users.php';
+require_once 'routes/route_user.php';
 require_once 'routes/route_login_register.php';
 
 $app->run();
