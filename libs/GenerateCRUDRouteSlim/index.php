@@ -81,7 +81,7 @@ function getFieldsParams($tableName)
     $allFields = getFields($tableName);
     $champs = "";
     foreach ($allFields as $champ) {
-        if(($champ["Key"] == "PRI" && $champ["Extra"] == "auto_increment") || $champ["Key"] == "PRI" || $champ["Default"] != NULL || ($champ["Key"] == "MUL" && isColumnTypeNumber($champ["Type"]) == TRUE)) continue; //si c'est un clÃ© primaire ou auto_increment ou un champ de type number ou un index
+        if(($champ["Key"] == "PRI" && $champ["Extra"] == "auto_increment") || $champ["Key"] == "PRI" || $champ["Default"] != NULL || ($champ["Key"] == "MUL" && isColumnTypeNumber($champ["Type"]) == TRUE)) continue; //si c'est un clé primaire ou auto_increment ou un champ de type number ou un index
         else
             $champs .= $champ["Field"] . "','";
     }
@@ -102,13 +102,13 @@ function generateAllRoutesFiles($ret)
 {
     error_reporting(E_ALL ^ E_DEPRECATED);
 
-    $list_user_tables = array("author", "users", "user", "fournisseurs", "fournisseur"); //ajouter ici la liste des noms des tables qui peut se connecter Ã  l'application
+    $list_user_tables = array("author", "users", "user", "fournisseurs", "fournisseur"); //ajouter ici la liste des noms des tables qui peut se connecter à l'application
 
     $list_table_affected_by_association = array(
         "application" => "tag"
     );
 
-    $fileCreated = "<h3>Listes des fichiers de routes crÃ©es Ã  ajouter dans index.php du rÃ©pÃ©rtoire v1 : </h3>";
+    $fileCreated = "<h3>Listes des fichiers de routes crées à ajouter dans index.php du répértoire v1 : </h3>";
 
     for($i=0;$i<count($ret);$i++)
     {
@@ -164,7 +164,7 @@ function generateAllRoutesFiles($ret)
             copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
         }
         else
-        if(strpos($tableName, "_") === FALSE) //si c'est une table simple Ã  mÃ j
+        if(strpos($tableName, "_") === FALSE) //si c'est une table simple à màj
         {
             $template = new Template('template/tpl/route_[tablename].tpl');
             $template->set('table_name', $tableName);
@@ -186,4 +186,4 @@ function generateAllRoutesFiles($ret)
     echo $fileCreated;
 }
 
-generate(); //gÃ©nÃ©rer les fichiers routes
+generate(); //générer les fichiers routes

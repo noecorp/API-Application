@@ -40,8 +40,6 @@ class DBManager
     public function getEntityManager()
     {
 
-        //$db = new NotORM($pdo, null, new NotORM_Cache_File("notorm.dat"));
-
         $structure = new NotORM_Structure_Convention(
             $primary = 'id',
             $foreign = '%s_id',
