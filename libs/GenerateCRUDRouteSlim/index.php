@@ -100,6 +100,8 @@ function getFieldsParams($tableName)
  */
 function generateAllRoutesFiles($ret)
 {
+    error_reporting(E_ALL ^ E_DEPRECATED);
+
     $list_user_tables = array("author", "users", "user", "fournisseurs", "fournisseur"); //ajouter ici la liste des noms des tables qui peut se connecter à l'application
 
     $list_table_affected_by_association = array(

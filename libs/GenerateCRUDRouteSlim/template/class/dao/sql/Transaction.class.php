@@ -5,14 +5,17 @@
  * @author: http://phpdao.com
  * @date: 27.11.2007
  */
-class Transaction{
+class Transaction
+{
 	private static $transactions;
 
 	private $connection;
 
-	public function Transaction(){
+	public function Transaction()
+	{
 		$this->connection = new Connection();
-		if(!Transaction::$transactions){
+		if(!Transaction::$transactions)
+		{
 			Transaction::$transactions = new ArrayList();
 		}
 		Transaction::$transactions->add($this);
@@ -22,7 +25,8 @@ class Transaction{
 	/**
 	 * Zakonczenie transakcji i zapisanie zmian
 	 */
-	public function commit(){
+	public function commit()
+	{
 		$this->connection->executeQuery('COMMIT');
 		$this->connection->close();
 		Transaction::$transactions->removeLast();
@@ -31,7 +35,8 @@ class Transaction{
 	/**
 	 * Zakonczenie transakcji i wycofanie zmian
 	 */
-	public function rollback(){
+	public function rollback()
+	{
 		$this->connection->executeQuery('ROLLBACK');
 		$this->connection->close();
 		Transaction::$transactions->removeLast();
@@ -42,7 +47,8 @@ class Transaction{
 	 *
 	 * @return polazenie do bazy
 	 */
-	public function getConnection(){
+	public function getConnection()
+	{
 		return $this->connection;
 	}
 
@@ -51,12 +57,13 @@ class Transaction{
 	 *
 	 * @return transkacja
 	 */
-	public static function getCurrentTransaction(){
-		if(Transaction::$transactions){
+	public static function getCurrentTransaction()
+	{
+		if(Transaction::$transactions)
+		{
 			$tran = Transaction::$transactions->getLast();
 			return $tran;
 		}
 		return;
 	}
 }
-?>

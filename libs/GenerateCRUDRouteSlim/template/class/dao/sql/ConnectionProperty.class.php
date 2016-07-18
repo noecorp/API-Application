@@ -5,21 +5,25 @@
  * @author: http://phpdao.com
  * @date: 27.11.2007
  */
-class ConnectionProperty{
+class ConnectionProperty
+{
 	private static $host = 'localhost';
 	private static $user = 'root';
 	private static $password = 'root';
 	private static $database = 'api_application';
 
-	public static function getHost(){
+	public static function getHost()
+	{
 		return ConnectionProperty::$host;
 	}
 
-	public static function getUser(){
+	public static function getUser()
+	{
 		return ConnectionProperty::$user;
 	}
 
-	public static function getPassword(){
+	public static function getPassword()
+	{
 		return ConnectionProperty::$password;
 	}
 
@@ -27,4 +31,3 @@ class ConnectionProperty{
 		return ConnectionProperty::$database;
 	}
 }
-?>

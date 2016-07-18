@@ -5,6 +5,9 @@
  * @author: http://phpdao.com
  * @date: 27.11.2007
  */
+
+error_reporting(E_ALL ^ E_DEPRECATED);
+
 class ConnectionFactory{
 	
 	/**
@@ -12,7 +15,8 @@ class ConnectionFactory{
 	 *
 	 * @return polaczenie
 	 */
-	static public function getConnection(){
+	static public function getConnection()
+	{
 		$conn = mysql_connect(ConnectionProperty::getHost(), ConnectionProperty::getUser(), ConnectionProperty::getPassword());
 		mysql_select_db(ConnectionProperty::getDatabase());
 		if(!$conn){
@@ -26,8 +30,8 @@ class ConnectionFactory{
 	 *
 	 * @param connection polaczenie do bazy
 	 */
-	static public function close($connection){
+	static public function close($connection)
+	{
 		mysql_close($connection);
 	}
 }
-?>

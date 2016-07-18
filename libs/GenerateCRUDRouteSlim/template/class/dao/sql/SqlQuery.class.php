@@ -5,7 +5,8 @@
  * @author: http://phpdao.com
  * @date: 27.10.2007
  */
-class SqlQuery{
+class SqlQuery
+{
 	var $txt;
 	var $params = array();
 	var $idx = 0;
@@ -15,7 +16,8 @@ class SqlQuery{
 	 *
 	 * @param String $txt zapytanie sql
 	 */
-	function SqlQuery($txt){
+	function SqlQuery($txt)
+	{
 		$this->txt = $txt;
 	}
 
@@ -24,7 +26,8 @@ class SqlQuery{
 	 *
 	 * @param String $value value set
 	 */
-	public function setString($value){
+	public function setString($value)
+	{
 		$value = mysql_real_escape_string($value);
 		$this->params[$this->idx++] = "'".$value."'";
 	}
@@ -34,7 +37,8 @@ class SqlQuery{
 	 *
 	 * @param String $value value to set
 	 */
-	public function set($value){
+	public function set($value)
+	{
 		$value = mysql_real_escape_string($value);
 		$this->params[$this->idx++] = "'".$value."'";
 	}
@@ -46,12 +50,15 @@ class SqlQuery{
 	 *
 	 * @param String $value wartosc do wstawienia
 	 */
-	public function setNumber($value){
-		if($value===null){
+	public function setNumber($value)
+	{
+		if($value===null)
+		{
 			$this->params[$this->idx++] = "null";
 			return;
 		}
-		if(!is_numeric($value)){
+		if(!is_numeric($value))
+		{
 			throw new Exception($value.' is not a number');
 		}
 		$this->params[$this->idx++] = "'".$value."'";
@@ -62,37 +69,52 @@ class SqlQuery{
 	 *
 	 * @return String
 	 */
-	public function getQuery(){
-		if($this->idx==0){
+	public function getQuery()
+	{
+		if($this->idx==0)
+		{
 			return $this->txt;
 		}
 		$p = explode("?", $this->txt);
 		$sql = '';
-		for($i=0;$i<=$this->idx;$i++){
-			if($i>=count($this->params)){
+		for($i=0;$i<=$this->idx;$i++)
+		{
+			if($i>=count($this->params))
+			{
 				$sql .= $p[$i];
-			}else{
-                            if("null"===$this->params[$i]){
-                                $columnName = $this->getColumnName($p[$i]);
-                                if(isset($columnName)){
-                                    $sql .= $columnName."is ".$this->params[$i];
-                                }else{
-                                    $sql .= $p[$i].$this->params[$i];
-                                }
-                            }else{
-                                $sql .= $p[$i].$this->params[$i];
-                            }
+			}
+			else
+			{
+				if("null"===$this->params[$i])
+				{
+					$columnName = $this->getColumnName($p[$i]);
+					if(isset($columnName))
+					{
+						$sql .= $columnName."is ".$this->params[$i];
+					}
+					else
+					{
+						$sql .= $p[$i].$this->params[$i];
+					}
+				}
+				else
+				{
+					$sql .= $p[$i].$this->params[$i];
+				}
 			}
 		}
 		return $sql;
 	}
         
-        private function getColumnName($textCopy){
+        private function getColumnName($textCopy)
+		{
                 $trimmedUppercaseSql = trim(strtoupper($this->txt));
-                if($this->startsWith($trimmedUppercaseSql, "SELECT ")){
+                if($this->startsWith($trimmedUppercaseSql, "SELECT "))
+				{
                     $rightTrimmedTextCopy = rtrim($textCopy, " ");
                     $columnName = rtrim($rightTrimmedTextCopy, "=");
-                    if(strlen($columnName) !== strlen($rightTrimmedTextCopy)){
+                    if(strlen($columnName) !== strlen($rightTrimmedTextCopy))
+					{
                         return $columnName;
                     }
                 }
@@ -107,10 +129,13 @@ class SqlQuery{
 	 * @param String $new
 	 * @return String
 	 */
-	private function replaceFirst($str, $old, $new){
+	private function replaceFirst($str, $old, $new)
+	{
 		$len = strlen($str);
-		for ($i=0;$i<$len;$i++){
-			if($str[$i]==$old){
+		for ($i=0;$i<$len;$i++)
+		{
+			if($str[$i]==$old)
+			{
 				$str = substr($str,0,$i).$new.substr($str,$i+1);
 				return $str;
 			}
@@ -147,4 +172,3 @@ class SqlQuery{
             return (substr($haystack, -$length) === $needle);
         }        
 }
-?>
