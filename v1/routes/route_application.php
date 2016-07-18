@@ -66,7 +66,7 @@ $app->get('/applications/:id', 'authenticate', function($id) use ($app, $db, $lo
     if(count($application) > 0)
     {
         $logManager->setLog($user_connected, (string)$application, false);
-        echoResponse(200, true, "L'author est retourné", $application);
+        echoResponse(200, true, "application est retourné", $application);
     }
     else
     {
@@ -98,11 +98,11 @@ $app->post('/applications', 'authenticate', function() use ($app, $db, $logManag
         echoResponse(400, false, "Oops! Une erreur est survenue lors de l'insertion du application", NULL);
     }
     else
-        if($insert_application != FALSE || is_array($insert_application))
-        {
-            $logManager->setLog($user_connected, buildSqlQueryInsert("application", $request_params), false);
-            echoResponse(201, true, "Application ajoutée avec succès", $insert_application);
-        }
+    if($insert_application != FALSE || is_array($insert_application))
+    {
+        $logManager->setLog($user_connected, buildSqlQueryInsert("application", $request_params), false);
+        echoResponse(201, true, "Application ajoutée avec succès", $insert_application);
+    }
 });
 
 /**

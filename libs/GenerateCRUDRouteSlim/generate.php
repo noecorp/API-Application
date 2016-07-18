@@ -99,15 +99,17 @@ function getFieldsParams($tableName)
  */
 function generateAllRoutesFiles($ret)
 {
+    $list_user_tables = array("author", "users", "user", "fournisseurs", "fournisseur"); //ajouter ici la liste des noms des tables qui peut se connecter à l'application
+
+    $list_table_affected_by_association = array(
+        "application" => "tag"
+    );
+
     for($i=0;$i<count($ret);$i++)
     {
         if(!doesTableContainPK($ret[$i])) continue;
-        $tableName = $ret[$i][0];
 
-        $list_user_tables = array("author", "users", "user", "fournisseurs", "fournisseur"); //ajouter ici la liste des noms des tables qui peut se connecter à l'application
-        $list_table_affected_by_association = array(
-            "application" => "tag"
-        );
+        $tableName = $ret[$i][0];
 
         if(in_array($tableName, $list_user_tables)) //si c'est un table d'utilisateur de l'application
         {
@@ -119,13 +121,13 @@ function generateAllRoutesFiles($ret)
             //login-register
             $template = new Template('template/tpl/route_[login_register].tpl');
             $template->set('table_name', $tableName);
-            $template->set('required_params', "email, password");
+            $template->set('required_params', "email','password");
             $template->write('generated/routes/route_login_register_'.$tableName.'.php');
         }
         else
-        if(array_key_exists($list_table_affected_by_association, $tableName))
+        if(array_key_exists($tableName, $list_table_affected_by_association)) //si la table est en relation avec un autre
         {
-            $template = new Template('route_[table_affected_by_association].tpl');
+            $template = new Template('template/tpl/route_[table_affected_by_association].tpl');
             $template->set('table_name', $tableName);
             $template->set('required_params', getFieldsParams($tableName));
             $template->set('table_name_affected', $list_table_affected_by_association[$tableName]);
