@@ -73,7 +73,7 @@ function getFields($table)
 
 /**
  * Get all params need to post
- * @param $allFields
+ * @param $tableName
  * @return string
  */
 function getFieldsParams($tableName)
