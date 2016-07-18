@@ -108,7 +108,7 @@ function generateAllRoutesFiles($ret)
         "application" => "tag"
     );
 
-    $fileCreated = "Listes des fichiers de routes crées à ajouter dans index.php du répértoire v1 : <br>";
+    $fileCreated = "<h3>Listes des fichiers de routes crées à ajouter dans index.php du répértoire v1 : </h3>";
 
     for($i=0;$i<count($ret);$i++)
     {
@@ -123,8 +123,6 @@ function generateAllRoutesFiles($ret)
             $template->set('required_params', getFieldsParams($tableName));
             $template->write('generated/routes/route_'.$tableName.'.php');
 
-            $fileCreated .= "require_once 'generated/routes/route_$tableName.php'; <br>";
-
             //login-register
             $template = new Template('template/tpl/route_[login_register].tpl');
             $template->set('table_name', $tableName);
@@ -132,8 +130,10 @@ function generateAllRoutesFiles($ret)
             $template->set('required_params_register', "name','email','password");
             $template->write('generated/routes/route_login_register_'.$tableName.'.php');
 
-            $fileCreated .= "require_once 'generated/routes/route_login_register_$tableName.php'; <br>";
+            $fileCreated .= "require_once 'routes_automatic_generated/route_$tableName.php'; <br>";
+            $fileCreated .= "require_once 'routes_automatic_generated/route_login_register_$tableName.php'; <br>";
 
+            copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
             copy('generated/routes/route_login_register_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_login_register_'.$tableName.'.php');
         }
         else
@@ -145,7 +145,7 @@ function generateAllRoutesFiles($ret)
             $template->set('table_name_affected', $list_table_affected_by_association[$tableName]);
             $template->write('generated/routes/route_'.$tableName.'.php');
 
-            $fileCreated .= "require_once 'generated/routes/route_$tableName.php'; <br>";
+            $fileCreated .= "require_once 'routes_automatic_generated/route_$tableName.php'; <br>";
 
             copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
         }
@@ -159,7 +159,7 @@ function generateAllRoutesFiles($ret)
             $template->set('table_name_second_part', explode("_",$tableName)[1]);
             $template->write('generated/routes/route_'.$tableName.'.php');
 
-            $fileCreated .= "require_once 'generated/routes/route_$tableName.php'; <br>";
+            $fileCreated .= "require_once 'routes_automatic_generated/route_$tableName.php'; <br>";
 
             copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
         }
@@ -171,7 +171,7 @@ function generateAllRoutesFiles($ret)
             $template->set('required_params', getFieldsParams($tableName));
             $template->write('generated/routes/route_'.$tableName.'.php');
 
-            $fileCreated .= "require_once 'generated/routes/route_$tableName.php'; <br>";
+            $fileCreated .= "require_once 'routes_automatic_generated/route_$tableName.php'; <br>";
 
             copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
         }
@@ -180,6 +180,8 @@ function generateAllRoutesFiles($ret)
     //route_login_register_simple
     copy('generated/routes/route_login_register_author.php', 'generated/routes/route_login_register.php');
     copy('generated/routes/route_login_register_author.php', '../../v1/routes_automatic_generated/route_login_register.php');
+
+    $fileCreated .= "require_once 'routes_automatic_generated/route_login_register.php'; <br>";
 
     echo $fileCreated;
 }
