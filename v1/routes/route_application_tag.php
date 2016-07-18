@@ -19,7 +19,7 @@ $logManager = new Log();
 
 /**
  * Affecte application to tag
- * url - /applications
+ * url - /applications_tags
  * method - POST
  * @params id_application, id_tags
  */
@@ -32,22 +32,22 @@ $app->post('/application_tags/:id_application', 'authenticate', function($id_app
 
     $inserted_tag = FALSE;
 
-    foreach ($request_params["tags_id"] as $tag_app)
+    foreach ($request_params["tags_id"] as $tag)
     {
         $data = array(
             "application_id" => $id_application,
-            "tag_id" => $tag_app["id"]
+            "tag_id" => $tag["id"]
         );
 
-        $insert_application_app = $db->entityManager->application_tag()->insert($data);
+        $insert_application_tag = $db->entityManager->application_tag()->insert($data);
 
-        if($insert_application_app != FALSE || is_array($insert_application_app))
+        if($insert_application_tag != FALSE || is_array($insert_application_tag))
         {
             $inserted_tag = TRUE;
             $logManager->setLog($user_connected, buildSqlQueryInsert("application_tag", $data), false); //application_tag insérée
         }
         else
-        if($insert_application_app == FALSE)
+        if($insert_application_tag == FALSE)
         {
             $inserted_tag = FALSE;
             $logManager->setLog($user_connected, buildSqlQueryInsert("application_tag", $data), true); //application_tag non insérée

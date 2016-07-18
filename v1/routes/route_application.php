@@ -131,11 +131,11 @@ $app->put('/applications/:id', 'authenticate', function($id) use ($app, $db, $lo
             echoResponse(400, false, "Oops! Une erreur est survenue lors de la mise à jour du application", NULL);
         }
         else
-            if($update_application != FALSE || is_array($update_application))
-            {
-                $logManager->setLog($user_connected, (string)$application, false);
-                echoResponse(200, true, "Tag mis à jour avec succès. Id : $id", NULL);
-            }
+        if($update_application != FALSE || is_array($update_application))
+        {
+            $logManager->setLog($user_connected, (string)$application, false);
+            echoResponse(200, true, "Tag mis à jour avec succès. Id : $id", NULL);
+        }
     }
     else
     {
@@ -159,6 +159,7 @@ $app->delete('/applications/:id', 'authenticate', function($id) use ($app, $db, 
     if($application_tag != FALSE)
     {
         if($db->entityManager->application_tag("application_id", $id)->delete())
+        {
             if($application && $application->delete())
             {
                 $logManager->setLog($user_connected, (string)$application, false);
@@ -169,6 +170,7 @@ $app->delete('/applications/:id', 'authenticate', function($id) use ($app, $db, 
                 $logManager->setLog($user_connected, (string)$application, true);
                 echoResponse(200, false, "Application id : $id n'a pa pu être supprimée", NULL);
             }
+        }
         else
         {
             $logManager->setLog($user_connected, (string)$application, true);

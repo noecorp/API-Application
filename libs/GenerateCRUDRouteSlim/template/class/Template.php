@@ -12,7 +12,8 @@ class Template
      * Constructor Template
      * @param $template
      */
-    function Template($template){
+    function Template($template)
+    {
         $this->template = $template;
         $this->content = $this->getContent();
     }
@@ -22,15 +23,17 @@ class Template
      * @param $key
      * @param $value
      */
-    function set($key, $value){
-        $this->content = str_replace('${'.$key.'}', $value, $this->content);
+    function set($key, $value)
+    {
+        $this->content = str_replace('{$'.$key.'}', $value, $this->content);
     }
 
     /**
      * Get content file
      * @return string
      */
-    function getContent(){
+    function getContent()
+    {
         $ret = '';
         $uchwyt = fopen ($this->template, "r");
         while (!feof ($uchwyt)) {
@@ -45,7 +48,8 @@ class Template
      * Write to template
      * @param $fileName
      */
-    function write($fileName){
+    function write($fileName)
+    {
         echo $fileName.'<br/>';
         $fd = fopen ($fileName, "w");
         fwrite($fd, $this->content);

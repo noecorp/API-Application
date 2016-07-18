@@ -54,7 +54,7 @@ $app->get('/tags/:id', 'authenticate', function($id) use ($app, $db, $logManager
     if(count($tag) > 0)
     {
         $logManager->setLog($user_connected, (string)$tag, false);
-        echoResponse(200, true, "L'author est retourné", $tag);
+        echoResponse(200, true, "tag est retourné", $tag);
     }
     else
     {
@@ -92,7 +92,7 @@ $app->post('/tags', 'authenticate', function() use ($app, $db, $logManager) {
         if($insert_tag != FALSE || is_array($insert_tag))
         {
             $logManager->setLog($user_connected, buildSqlQueryInsert("tag", $data), false);
-            echoResponse(201, true, "Tag ajouté avec succès", $insert_tag);
+            echoResponse(201, true, "tag ajouté avec succès", $insert_tag);
         }
 });
 
@@ -124,13 +124,13 @@ $app->put('/tags/:id', 'authenticate', function($id) use ($app, $db, $logManager
             if($update_tag != FALSE || is_array($update_tag))
             {
                 $logManager->setLog($user_connected, (string)$tag, false);
-                echoResponse(201, true, "Tag mis à jour avec succès", NULL);
+                echoResponse(201, true, "tag mis à jour avec succès", NULL);
             }
     }
     else
     {
         $logManager->setLog($user_connected, (string)$tag, true);
-        echoResponse(400, false, "Tag inexistant !!", NULL);
+        echoResponse(400, false, "tag inexistant !!", NULL);
     }
 
 });
@@ -149,12 +149,12 @@ $app->delete('/tags/:id', 'authenticate', function($id) use ($app, $db, $logMana
         if($tag && $tag->delete())
         {
             $logManager->setLog($user_connected, (string)$tag, false);
-            echoResponse(200, true, "Tag id : $id supprimé avec succès", NULL);
+            echoResponse(200, true, "tag id : $id supprimé avec succès", NULL);
         }
         else
         {
             $logManager->setLog($user_connected, (string)$tag, true);
-            echoResponse(200, false, "Tag id : $id pas supprimé. Erreur !!", NULL);
+            echoResponse(200, false, "tag id : $id pas supprimé. Erreur !!", NULL);
         }
     else
     {
