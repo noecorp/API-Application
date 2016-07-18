@@ -62,7 +62,7 @@ function isColumnTypeNumber($columnType)
 /**
  * Get all fields in table
  * @param $table
- * @return wynik
+ * @return all name tables
  * @throws Exception
  */
 function getFields($table)
@@ -100,7 +100,7 @@ function getFieldsParams($tableName)
  */
 function generateAllRoutesFiles($ret)
 {
-    error_reporting(E_ALL ^ E_DEPRECATED);
+    error_reporting(E_ALL ^ E_DEPRECATED); //don't display error depreciated wamp
 
     $list_user_tables = array("author", "users", "user", "fournisseurs", "fournisseur"); //ajouter ici la liste des noms des tables qui peut se connecter à l'application
 
