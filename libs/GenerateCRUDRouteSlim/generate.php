@@ -121,7 +121,8 @@ function generateAllRoutesFiles($ret)
             //login-register
             $template = new Template('template/tpl/route_[login_register].tpl');
             $template->set('table_name', $tableName);
-            $template->set('required_params', "email','password");
+            $template->set('required_params_login', "email','password");
+            $template->set('required_params_register', "name','email','password");
             $template->write('generated/routes/route_login_register_'.$tableName.'.php');
         }
         else

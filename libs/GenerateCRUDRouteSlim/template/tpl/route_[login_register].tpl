@@ -24,7 +24,7 @@ $logManager = new Log();
  * @params email, password
  */
 $app->post('/login', function() use ($app, $db, $logManager) {
-    verifyRequiredParams(array('{$required_params}')); // vérifier les paramètres requises
+    verifyRequiredParams(array('{$required_params_login}')); // vérifier les paramètres requises
 
     //recupérer les valeurs POST
     $request_params = json_decode($app->request()->getBody(), true);
@@ -72,7 +72,7 @@ $app->post('/login', function() use ($app, $db, $logManager) {
 * params - name, email, password
 */
 $app->post('/register', function() use ($app, $db, $logManager) {
-    verifyRequiredParams(array('{$required_params}')); // vérifier les paramédtres requises
+    verifyRequiredParams(array('{$required_params_register}')); // vérifier les paramédtres requises
 
     // lecture des params de post
     $request_params = json_decode($app->request()->getBody(), true);
