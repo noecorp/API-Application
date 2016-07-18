@@ -47,7 +47,10 @@ $app->get('/applications', 'authenticate', function() use ($app, $db, $logManage
         echoResponse(200, true, "Tous les applications retournés", $data_applications);
     }
     else
-        echoResponse(400, true, "Une erreur est survenue.", NULL);
+    {
+        $logManager->setLog($user_connected, (string)$applications, true);
+        echoResponse(400, false, "Une erreur est survenue.", NULL);
+    }
 
 });
 
@@ -63,9 +66,13 @@ $app->get('/applications/:id', 'authenticate', function($id) use ($app, $db, $lo
     if(count($application) > 0)
     {
         $logManager->setLog($user_connected, (string)$application, false);
-        echoResponse(200, true, "L'author est retourné", $application);
+        echoResponse(200, true, "application est retourné", $application);
     }
-    else echoResponse(400, true, "Une erreur est survenue.", NULL);
+    else
+    {
+        $logManager->setLog($user_connected, (string)$application, false);
+        echoResponse(400, true, "Une erreur est survenue.", NULL);
+    }
 });
 
 /**
@@ -91,11 +98,11 @@ $app->post('/applications', 'authenticate', function() use ($app, $db, $logManag
         echoResponse(400, false, "Oops! Une erreur est survenue lors de l'insertion du application", NULL);
     }
     else
-        if($insert_application != FALSE || is_array($insert_application))
-        {
-            $logManager->setLog($user_connected, buildSqlQueryInsert("application", $request_params), false);
-            echoResponse(201, true, "Application ajoutée avec succès", $insert_application);
-        }
+    if($insert_application != FALSE || is_array($insert_application))
+    {
+        $logManager->setLog($user_connected, buildSqlQueryInsert("application", $request_params), false);
+        echoResponse(201, true, "Application ajoutée avec succès", $insert_application);
+    }
 });
 
 /**
@@ -124,18 +131,17 @@ $app->put('/applications/:id', 'authenticate', function($id) use ($app, $db, $lo
             echoResponse(400, false, "Oops! Une erreur est survenue lors de la mise à jour du application", NULL);
         }
         else
-            if($update_application != FALSE || is_array($update_application))
-            {
-                $logManager->setLog($user_connected, (string)$application, false);
-                echoResponse(200, true, "Tag mis à jour avec succès. Id : $id", NULL);
-            }
+        if($update_application != FALSE || is_array($update_application))
+        {
+            $logManager->setLog($user_connected, (string)$application, false);
+            echoResponse(200, true, "Tag mis à jour avec succès. Id : $id", NULL);
+        }
     }
     else
     {
         $logManager->setLog($user_connected, (string)$application, true);
         echoResponse(400, false, "Tag inexistant !!", NULL);
     }
-
 });
 
 /**
@@ -153,6 +159,7 @@ $app->delete('/applications/:id', 'authenticate', function($id) use ($app, $db, 
     if($application_tag != FALSE)
     {
         if($db->entityManager->application_tag("application_id", $id)->delete())
+        {
             if($application && $application->delete())
             {
                 $logManager->setLog($user_connected, (string)$application, false);
@@ -163,6 +170,7 @@ $app->delete('/applications/:id', 'authenticate', function($id) use ($app, $db, 
                 $logManager->setLog($user_connected, (string)$application, true);
                 echoResponse(200, false, "Application id : $id n'a pa pu être supprimée", NULL);
             }
+        }
         else
         {
             $logManager->setLog($user_connected, (string)$application, true);
@@ -182,5 +190,4 @@ $app->delete('/applications/:id', 'authenticate', function($id) use ($app, $db, 
             echoResponse(200, false, "Application id : $id n'a pa pu être supprimée", NULL);
         }
     }
-
 });
