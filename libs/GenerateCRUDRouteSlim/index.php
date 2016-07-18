@@ -81,7 +81,7 @@ function getFieldsParams($tableName)
     $allFields = getFields($tableName);
     $champs = "";
     foreach ($allFields as $champ) {
-        if(($champ["Key"] == "PRI" && $champ["Extra"] == "auto_increment") || $champ["Key"] == "PRI" || $champ["Default"] != NULL || ($champ["Key"] == "MUL" && isColumnTypeNumber($champ["Type"]) == TRUE)) continue;
+        if(($champ["Key"] == "PRI" && $champ["Extra"] == "auto_increment") || $champ["Key"] == "PRI" || $champ["Default"] != NULL || ($champ["Key"] == "MUL" && isColumnTypeNumber($champ["Type"]) == TRUE)) continue; //si c'est un clé primaire ou auto_increment ou un champ de type number ou un index
         else
             $champs .= $champ["Field"] . "','";
     }
