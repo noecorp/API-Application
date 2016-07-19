@@ -1,5 +1,7 @@
 <?php
 
+/*****************************************************************************************/
+
 require_once('template/class/dao/sql/Connection.class.php');
 require_once('template/class/dao/sql/ConnectionFactory.class.php');
 require_once('template/class/dao/sql/ConnectionProperty.class.php');
@@ -107,7 +109,7 @@ function getFieldsParams($tableName)
     $allFields = getFields($tableName);
     $champs = "";
     foreach ($allFields as $champ) {
-        if(($champ["Key"] == "PRI" && $champ["Extra"] == "auto_increment") || $champ["Key"] == "PRI" || $champ["Default"] != NULL || ($champ["Key"] == "MUL" && isColumnTypeNumber($champ["Type"]) == TRUE)) continue; //si c'est un clÈ primaire ou auto_increment ou un champ de type number ou un index
+        if(($champ["Key"] == "PRI" && $champ["Extra"] == "auto_increment") || $champ["Key"] == "PRI" || $champ["Default"] != NULL || ($champ["Key"] == "MUL" && isColumnTypeNumber($champ["Type"]) == TRUE)) continue; //si c'est un cl√© primaire ou auto_increment ou un champ de type number ou un index
         else
             $champs .= $champ["Field"] . "','";
     }
@@ -200,16 +202,16 @@ function generateAllRoutesFiles($ret)
 {
     error_reporting(E_ALL ^ E_DEPRECATED); //don't display error depreciated wamp
 
-    //$list_user_tables = array("author", "users", "user", "fournisseurs", "fournisseur"); //ajouter ici la liste des noms des tables qui peut se connecter ‡ l'application
+    //$list_user_tables = array("author", "users", "user", "fournisseurs", "fournisseur"); //ajouter ici la liste des noms des tables qui peut se connecter √† l'application
 
     /*$list_table_affected_by_association = array(
         "application" => "tag"
     );*/
 
-    $list_user_tables = getTableUser(); //rÈcuperer tous les tables utilisateurs
-    $list_table_affected_by_association = buildTableNameWithAssociation(); //rÈcupÈrer les tables avec ce qui y sont associÈs
+    $list_user_tables = getTableUser(); //r√©cuperer tous les tables utilisateurs
+    $list_table_affected_by_association = buildTableNameWithAssociation(); //r√©cup√©rer les tables avec ce qui y sont associ√©s
 
-    $fileCreated = "<h3>Listes des fichiers de routes crÈes ‡ ajouter dans index.php du rÈpÈrtoire v1 : </h3>";
+    $fileCreated = "";
 
     for($i=0;$i<count($ret);$i++)
     {
@@ -238,59 +240,109 @@ function generateAllRoutesFiles($ret)
             copy('generated/routes/route_login_register_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_login_register_'.$tableName.'.php');
         }
         else
-        if(existInArray($list_table_affected_by_association, $tableName)) //si la table est en relation avec un autre
-        {
-            foreach ($list_table_affected_by_association as $association)
+            if(existInArray($list_table_affected_by_association, $tableName)) //si la table est en relation avec un autre
             {
-                if(array_key_exists($tableName, $association))
+                foreach ($list_table_affected_by_association as $association)
                 {
-                    $template = new Template('template/tpl/route_[table_affected_by_association].tpl');
+                    if(array_key_exists($tableName, $association))
+                    {
+                        $template = new Template('template/tpl/route_[table_affected_by_association].tpl');
+                        $template->set('table_name', $tableName);
+                        $template->set('required_params', getFieldsParams($tableName));
+                        $template->set('table_name_affected', $association[$tableName]);
+                        $template->write('generated/routes/route_'.$tableName.'.php');
+
+                        $fileCreated .= "require_once 'routes_automatic_generated/route_$tableName.php'; <br>";
+
+                        copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
+                    }
+                }
+            }
+            else
+                if(strpos($tableName, "_") !== FALSE) //si c'est une table d'association
+                {
+                    $template = new Template('template/tpl/route_[tablename_association].tpl');
                     $template->set('table_name', $tableName);
                     $template->set('required_params', getFieldsParams($tableName));
-                    $template->set('table_name_affected', $association[$tableName]);
+                    $template->set('table_name_first_part', explode("_",$tableName)[0]);
+                    $template->set('table_name_second_part', explode("_",$tableName)[1]);
                     $template->write('generated/routes/route_'.$tableName.'.php');
 
                     $fileCreated .= "require_once 'routes_automatic_generated/route_$tableName.php'; <br>";
 
                     copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
                 }
-            }
-        }
-        else
-        if(strpos($tableName, "_") !== FALSE) //si c'est une table d'association
-        {
-            $template = new Template('template/tpl/route_[tablename_association].tpl');
-            $template->set('table_name', $tableName);
-            $template->set('required_params', getFieldsParams($tableName));
-            $template->set('table_name_first_part', explode("_",$tableName)[0]);
-            $template->set('table_name_second_part', explode("_",$tableName)[1]);
-            $template->write('generated/routes/route_'.$tableName.'.php');
+                else
+                    if(strpos($tableName, "_") === FALSE) //si c'est une table simple √† m√†j (crud) tout simplement
+                    {
+                        $template = new Template('template/tpl/route_[tablename].tpl');
+                        $template->set('table_name', $tableName);
+                        $template->set('required_params', getFieldsParams($tableName));
+                        $template->write('generated/routes/route_'.$tableName.'.php');
 
-            $fileCreated .= "require_once 'routes_automatic_generated/route_$tableName.php'; <br>";
+                        $fileCreated .= "require_once 'routes_automatic_generated/route_$tableName.php'; <br>";
 
-            copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
-        }
-        else
-        if(strpos($tableName, "_") === FALSE) //si c'est une table simple ‡ m‡j (crud) tout simplement
-        {
-            $template = new Template('template/tpl/route_[tablename].tpl');
-            $template->set('table_name', $tableName);
-            $template->set('required_params', getFieldsParams($tableName));
-            $template->write('generated/routes/route_'.$tableName.'.php');
-
-            $fileCreated .= "require_once 'routes_automatic_generated/route_$tableName.php'; <br>";
-
-            copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
-        }
+                        copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
+                    }
     }
 
     //route_login_register_simple
     copy('generated/routes/route_login_register_author.php', 'generated/routes/route_login_register.php');
     copy('generated/routes/route_login_register_author.php', '../../v1/routes_automatic_generated/route_login_register.php');
 
-    $fileCreated .= "require_once 'routes_automatic_generated/route_login_register.php'; <br>";
+    $fileCreated .= "require_once 'routes_automatic_generated/route_login_register.php'; <br>"; ?>
 
-    echo $fileCreated;
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+        <title>Generate CRUD Route Slim</title>
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+        <!-- Bootstrap core CSS -->
+        <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Material Design Bootstrap -->
+        <link href="assets/css/mdb.min.css" rel="stylesheet">
+    </head>
+    <body>
+    <!--Panel-->
+    <div class="card text-xs-center">
+        <div class="card-header default-color-dark white-text">
+    Generate CRUD Route Slim
+    </div>
+        <div class="card-block">
+            <h4 class="card-title">Tous les routes (APIs) on √©t√© cr√©e</h4>
+            <p class="card-text">Veuillez copier tous les lignes de code suivant dans le fichier index.php du r√©p√©rtoire v1</p>
+            <p class="card-text"><?php echo $fileCreated; ?></p>
+
+            <form class="form-inline" action="index.php" method="post">
+                <div class="md-form form-group">
+                    <input type="submit" class="btn btn-default btn-sm" value="Download source">
+                </div>
+            </form>
+
+        </div>
+        <div class="card-footer text-muted default-color-dark white-text">
+    Copyright &copy; <?php echo date("Y"); ?>. Create by Hery RAKOTONARIVO
+    </div>
+    </div>
+    <!--/.Panel-->
+    </body>
+    </html>
+
+<?php
 }
 
-generate(); //gÈnÈrer les fichiers routes
+$fileConfig = dirname(dirname(__DIR__)) . '/libs/GenerateCRUDRouteSlim/template/class/dao/config.php';
+
+if(file_get_contents($fileConfig) == "" || file_get_contents($fileConfig) == NULL)
+{
+    header('location:setting.php');
+}
+else generate(); //generate all route
