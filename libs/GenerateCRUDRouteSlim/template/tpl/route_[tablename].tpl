@@ -146,15 +146,17 @@ $app->delete('/{$table_name}s/:id', 'authenticate', function($id) use ($app, $db
     global $user_connected;
 
     if($db->entityManager->application_{$table_name}("{$table_name}_id", $id)->delete())
-    if(${$table_name} && ${$table_name}->delete())
     {
-        $logManager->setLog($user_connected, (string)${$table_name}, false);
-        echoResponse(200, true, "{$table_name} id : $id supprimé avec succès", NULL);
-    }
-    else
-    {
-        $logManager->setLog($user_connected, (string)${$table_name}, true);
-        echoResponse(200, false, "{$table_name} id : $id pas supprimé. Erreur !!", NULL);
+        if(${$table_name} && ${$table_name}->delete())
+        {
+            $logManager->setLog($user_connected, (string)${$table_name}, false);
+            echoResponse(200, true, "{$table_name} id : $id supprimé avec succès", NULL);
+        }
+        else
+        {
+            $logManager->setLog($user_connected, (string)${$table_name}, true);
+            echoResponse(200, false, "{$table_name} id : $id pas supprimé. Erreur !!", NULL);
+        }
     }
     else
     {

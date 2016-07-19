@@ -146,6 +146,7 @@ $app->delete('/tags/:id', 'authenticate', function($id) use ($app, $db, $logMana
     global $user_connected;
 
     if($db->entityManager->application_tag("tag_id", $id)->delete())
+    {
         if($tag && $tag->delete())
         {
             $logManager->setLog($user_connected, (string)$tag, false);
@@ -156,6 +157,7 @@ $app->delete('/tags/:id', 'authenticate', function($id) use ($app, $db, $logMana
             $logManager->setLog($user_connected, (string)$tag, true);
             echoResponse(200, false, "tag id : $id pas supprimé. Erreur !!", NULL);
         }
+    }
     else
     {
         $logManager->setLog($user_connected, (string)$tag, true);

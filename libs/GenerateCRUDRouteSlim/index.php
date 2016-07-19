@@ -18,6 +18,7 @@ function generate()
     $sql = 'SHOW TABLES';
     $ret = QueryExecutor::execute(new SqlQuery($sql));
     generateAllRoutesFiles($ret);
+    //buildTableNameWithAssociation();
 }
 
 /**
@@ -93,6 +94,61 @@ function getFieldsParams($tableName)
 }
 
 /**
+ * Get all table name in database indicated
+ * @return array
+ * @throws Exception
+ */
+function buildTableNameWithAssociation()
+{
+    $result = array();
+    $sql = 'SHOW TABLES';
+    $allTableName = QueryExecutor::execute(new SqlQuery($sql));
+
+    foreach ($allTableName as $tableName)
+    {
+        if(strpos($tableName[0], "_") !== FALSE)
+        {
+            $tableNameExplode = explode("_", $tableName[0]);
+            $tableNameAssociation = array(
+                $tableNameExplode[0] => $tableNameExplode[1]
+            );
+            $result[] = $tableNameAssociation;
+        }
+    }
+
+    //var_dump($result);
+    return $result;
+}
+
+/**
+ * Get all tableName associated
+ * @param $tableName
+ * @return array
+ */
+function getTableNameAssociated($tableName)
+{
+    $tableNameWithAssociation = buildTableNameWithAssociation();
+    $result = array();
+
+    foreach ($tableNameWithAssociation as $association)
+    {
+        if(array_key_exists($tableName, $association))
+            $result[] = $association[$tableName];
+    }
+
+    return $result;
+}
+
+function existInArray($array, $key)
+{
+    foreach ($array as $tab)
+    {
+        if(array_key_exists($key, $tab)) return TRUE;
+    }
+    return FALSE;
+}
+
+/**
  * Enter description here...
  *
  * @param $ret
@@ -104,9 +160,11 @@ function generateAllRoutesFiles($ret)
 
     $list_user_tables = array("author", "users", "user", "fournisseurs", "fournisseur"); //ajouter ici la liste des noms des tables qui peut se connecter à l'application
 
-    $list_table_affected_by_association = array(
+    /*$list_table_affected_by_association = array(
         "application" => "tag"
-    );
+    );*/
+
+    $list_table_affected_by_association = buildTableNameWithAssociation();
 
     $fileCreated = "<h3>Listes des fichiers de routes crées à ajouter dans index.php du répértoire v1 : </h3>";
 
@@ -137,17 +195,40 @@ function generateAllRoutesFiles($ret)
             copy('generated/routes/route_login_register_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_login_register_'.$tableName.'.php');
         }
         else
-        if(array_key_exists($tableName, $list_table_affected_by_association)) //si la table est en relation avec un autre
+        if(existInArray($list_table_affected_by_association, $tableName)) //si la table est en relation avec un autre
         {
-            $template = new Template('template/tpl/route_[table_affected_by_association].tpl');
-            $template->set('table_name', $tableName);
-            $template->set('required_params', getFieldsParams($tableName));
-            $template->set('table_name_affected', $list_table_affected_by_association[$tableName]);
-            $template->write('generated/routes/route_'.$tableName.'.php');
+            //array_key_exists($tableName, $list_table_affected_by_association)
+            /*foreach ($list_table_affected_by_association as $key => $value)
+            {
+                if($key == $tableName)
+                {
+                    $template = new Template('template/tpl/route_[table_affected_by_association].tpl');
+                    $template->set('table_name', $tableName);
+                    $template->set('required_params', getFieldsParams($tableName));
+                    $template->set('table_name_affected', $value);
+                    $template->write('generated/routes/route_'.$tableName.'.php');
 
-            $fileCreated .= "require_once 'routes_automatic_generated/route_$tableName.php'; <br>";
+                    $fileCreated .= "require_once 'routes_automatic_generated/route_$tableName.php'; <br>";
 
-            copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
+                    copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
+                }
+            }*/
+
+            foreach ($list_table_affected_by_association as $association)
+            {
+                if(array_key_exists($tableName, $association))
+                {
+                    $template = new Template('template/tpl/route_[table_affected_by_association].tpl');
+                    $template->set('table_name', $tableName);
+                    $template->set('required_params', getFieldsParams($tableName));
+                    $template->set('table_name_affected', $association[$tableName]);
+                    $template->write('generated/routes/route_'.$tableName.'.php');
+
+                    $fileCreated .= "require_once 'routes_automatic_generated/route_$tableName.php'; <br>";
+
+                    copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
+                }
+            }
         }
         else
         if(strpos($tableName, "_") !== FALSE) //si c'est une table d'association
@@ -164,7 +245,7 @@ function generateAllRoutesFiles($ret)
             copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
         }
         else
-        if(strpos($tableName, "_") === FALSE) //si c'est une table simple à màj
+        if(strpos($tableName, "_") === FALSE) //si c'est une table simple à màj (crud) tout simplement
         {
             $template = new Template('template/tpl/route_[tablename].tpl');
             $template->set('table_name', $tableName);
