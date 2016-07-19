@@ -18,7 +18,6 @@ function generate()
     $sql = 'SHOW TABLES';
     $ret = QueryExecutor::execute(new SqlQuery($sql));
     generateAllRoutesFiles($ret);
-    //buildTableNameWithAssociation();
 }
 
 /**
@@ -73,6 +72,32 @@ function getFields($table)
 }
 
 /**
+ * Test if table is a user table
+ *
+ * @return array
+ */
+function getTableUser()
+{
+    $allTableName = getAllTableName();
+    $allUserTable = array();
+
+    foreach ($allTableName as $tableName)
+    {
+        $fields = getFields($tableName[0]);
+
+        foreach ($fields as $field)
+        {
+            if($field["Field"] == "api_key" || $field["Field"] == "apiKey")
+            {
+                array_push($allUserTable, $tableName[0]);
+            }
+        }
+    }
+
+    return $allUserTable;
+}
+
+/**
  * Get all params need to post
  * @param $tableName
  * @return string
@@ -91,6 +116,24 @@ function getFieldsParams($tableName)
     $champs = rtrim($champs, "'");
 
     return $champs;
+}
+
+/**
+ * Get all table name
+ * @throws Exception
+ */
+function getAllTableName()
+{
+    $result = array();
+    $sql = 'SHOW TABLES';
+    $allTableName = QueryExecutor::execute(new SqlQuery($sql));
+
+    foreach ($allTableName as $tableName)
+    {
+        array_push($result, $tableName);
+    }
+
+    return $result;
 }
 
 /**
@@ -116,7 +159,6 @@ function buildTableNameWithAssociation()
         }
     }
 
-    //var_dump($result);
     return $result;
 }
 
@@ -158,13 +200,14 @@ function generateAllRoutesFiles($ret)
 {
     error_reporting(E_ALL ^ E_DEPRECATED); //don't display error depreciated wamp
 
-    $list_user_tables = array("author", "users", "user", "fournisseurs", "fournisseur"); //ajouter ici la liste des noms des tables qui peut se connecter à l'application
+    //$list_user_tables = array("author", "users", "user", "fournisseurs", "fournisseur"); //ajouter ici la liste des noms des tables qui peut se connecter à l'application
 
     /*$list_table_affected_by_association = array(
         "application" => "tag"
     );*/
 
-    $list_table_affected_by_association = buildTableNameWithAssociation();
+    $list_user_tables = getTableUser(); //récuperer tous les tables utilisateurs
+    $list_table_affected_by_association = buildTableNameWithAssociation(); //récupérer les tables avec ce qui y sont associés
 
     $fileCreated = "<h3>Listes des fichiers de routes crées à ajouter dans index.php du répértoire v1 : </h3>";
 
@@ -197,23 +240,6 @@ function generateAllRoutesFiles($ret)
         else
         if(existInArray($list_table_affected_by_association, $tableName)) //si la table est en relation avec un autre
         {
-            //array_key_exists($tableName, $list_table_affected_by_association)
-            /*foreach ($list_table_affected_by_association as $key => $value)
-            {
-                if($key == $tableName)
-                {
-                    $template = new Template('template/tpl/route_[table_affected_by_association].tpl');
-                    $template->set('table_name', $tableName);
-                    $template->set('required_params', getFieldsParams($tableName));
-                    $template->set('table_name_affected', $value);
-                    $template->write('generated/routes/route_'.$tableName.'.php');
-
-                    $fileCreated .= "require_once 'routes_automatic_generated/route_$tableName.php'; <br>";
-
-                    copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
-                }
-            }*/
-
             foreach ($list_table_affected_by_association as $association)
             {
                 if(array_key_exists($tableName, $association))
