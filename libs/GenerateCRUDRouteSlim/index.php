@@ -30,6 +30,25 @@ function init()
     @mkdir("generated");
     @mkdir("generated/routes");
     @mkdir("../../v1/routes_automatic_generated");
+
+    /** Auto generate v2 */
+    @mkdir("../../v2");
+    @mkdir("../../v2/routes");
+    @mkdir("../../v2/includes");
+    @mkdir("../../v2/includes/db_manager");
+    @mkdir("../../v2/includes/functions");
+
+    copy("toInclude/includes/db_manager/dbManager.php", "../../v2/includes/db_manager/dbManager.php");
+    copy("toInclude/includes/functions/json.php", "../../v2/includes/functions/json.php");
+    copy("toInclude/includes/functions/security_api.php", "../../v2/includes/functions/security_api.php");
+    copy("toInclude/includes/functions/set_headers.php", "../../v2/includes/functions/set_headers.php");
+    copy("toInclude/includes/functions/utils.php", "../../v2/includes/functions/utils.php");
+    copy("toInclude/includes/Log.class.php", "../../v2/includes/Log.class.php");
+    copy("toInclude/includes/pass_hash.php", "../../v2/includes/pass_hash.php");
+
+
+    copy("toInclude/.htaccess", "../../v2/.htaccess");
+    copy("toInclude/index.php", "../../v2/index.php");
 }
 
 /**
@@ -238,6 +257,10 @@ function generateAllRoutesFiles($ret)
 
             copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
             copy('generated/routes/route_login_register_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_login_register_'.$tableName.'.php');
+
+            //v2
+            copy('generated/routes/route_'.$tableName.'.php', '../../v2/routes/route_'.$tableName.'.php');
+            copy('generated/routes/route_login_register_'.$tableName.'.php', '../../v2/routes/route_login_register_'.$tableName.'.php');
         }
         else
             if(existInArray($list_table_affected_by_association, $tableName)) //si la table est en relation avec un autre
@@ -255,6 +278,9 @@ function generateAllRoutesFiles($ret)
                         $fileCreated .= "require_once 'routes_automatic_generated/route_$tableName.php'; <br>";
 
                         copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
+
+                        //v2
+                        copy('generated/routes/route_'.$tableName.'.php', '../../v2/routes/route_'.$tableName.'.php');
                     }
                 }
             }
@@ -271,6 +297,9 @@ function generateAllRoutesFiles($ret)
                     $fileCreated .= "require_once 'routes_automatic_generated/route_$tableName.php'; <br>";
 
                     copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
+
+                    //v2
+                    copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes/route_'.$tableName.'.php');
                 }
                 else
                     if(strpos($tableName, "_") === FALSE) //si c'est une table simple à màj (crud) tout simplement
@@ -283,12 +312,23 @@ function generateAllRoutesFiles($ret)
                         $fileCreated .= "require_once 'routes_automatic_generated/route_$tableName.php'; <br>";
 
                         copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
+
+                        //v2
+                        copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes/route_'.$tableName.'.php');
                     }
     }
+
+    /** STATIC A RETIRER A LA FIN */
 
     //route_login_register_simple
     copy('generated/routes/route_login_register_author.php', 'generated/routes/route_login_register.php');
     copy('generated/routes/route_login_register_author.php', '../../v1/routes_automatic_generated/route_login_register.php');
+
+    //v2
+    copy('generated/routes/route_login_register_author.php', 'generated/routes/route_login_register.php');
+    copy('generated/routes/route_login_register_author.php', '../../v2/routes/route_login_register.php');
+
+    /** FIN STATIC */
 
     $fileCreated .= "require_once 'routes_automatic_generated/route_login_register.php'; <br>"; ?>
 

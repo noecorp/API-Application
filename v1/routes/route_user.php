@@ -35,7 +35,7 @@ $app->get('/users', 'authenticate', function() use ($app, $db, $logManager) {
         foreach ($users as $user) array_push($data_users, JSON::removeNode($user, "password_hash"));
 
         $logManager->setLog($user_connected, (string)$users, false);
-        echoResponse(200, true, "Tous les auteurs retournés", $data_users);
+        echoResponse(200, true, "Tous les auteurs retournÃ©s", $data_users);
     }
     else
     {
@@ -57,7 +57,7 @@ $app->get('/users/:id', 'authenticate', function($id) use ($app, $db, $logManage
     if(count($users) > 0)
     {
         $logManager->setLog($user_connected, (string)$users, false);
-        echoResponse(200, true, "L'user est retourné", $users);
+        echoResponse(200, true, "L'user est retournÃ©", $users);
     }
     else
     {

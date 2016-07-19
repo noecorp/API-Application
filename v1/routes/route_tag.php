@@ -33,7 +33,7 @@ $app->get('/tags', 'authenticate', function() use ($app, $db, $logManager) {
         foreach ($tags as $tag) array_push($data_tags, $tag);
 
         $logManager->setLog($user_connected, (string)$tags, false);
-        echoResponse(200, true, "Tous les tags retournés", $data_tags);
+        echoResponse(200, true, "Tous les tags retournes", $data_tags);
     }
     else
     {
@@ -43,10 +43,10 @@ $app->get('/tags', 'authenticate', function() use ($app, $db, $logManager) {
 });
 
 /**
- * Get one tag by id
- * url - /tags/:id
- * method - GET
- */
+* Get one tag by id
+* url - /tags/:id
+* method - GET
+*/
 $app->get('/tags/:id', 'authenticate', function($id) use ($app, $db, $logManager) {
     $tag = $db->entityManager->tag[$id];
     global $user_connected;
@@ -54,7 +54,7 @@ $app->get('/tags/:id', 'authenticate', function($id) use ($app, $db, $logManager
     if(count($tag) > 0)
     {
         $logManager->setLog($user_connected, (string)$tag, false);
-        echoResponse(200, true, "tag est retourné", $tag);
+        echoResponse(200, true, "tag retourne(e)", $tag);
     }
     else
     {
@@ -64,16 +64,16 @@ $app->get('/tags/:id', 'authenticate', function($id) use ($app, $db, $logManager
 });
 
 /**
- * Create new tag
- * url - /tags/
- * method - POST
- * @params name
- */
+* Create new tag
+* url - /tags/
+* method - POST
+* @params name
+*/
 $app->post('/tags', 'authenticate', function() use ($app, $db, $logManager) {
-    verifyRequiredParams(array('name')); // vérifier les paramédtres requises
+    verifyRequiredParams(array('name')); // verifier les paramedtres requises
     global $user_connected;
 
-    //recupérer les valeurs POST
+    //recuperer les valeurs POST
     $request_params = json_decode($app->request()->getBody(), true);
     $name_tag = $request_params["name"];
 
@@ -89,24 +89,24 @@ $app->post('/tags', 'authenticate', function() use ($app, $db, $logManager) {
         echoResponse(400, false, "Oops! Une erreur est survenue lors de l'insertion du tag", NULL);
     }
     else
-        if($insert_tag != FALSE || is_array($insert_tag))
-        {
-            $logManager->setLog($user_connected, buildSqlQueryInsert("tag", $data), false);
-            echoResponse(201, true, "tag ajouté avec succès", $insert_tag);
-        }
+    if($insert_tag != FALSE || is_array($insert_tag))
+    {
+        $logManager->setLog($user_connected, buildSqlQueryInsert("tag", $data), false);
+        echoResponse(201, true, "tag ajoute(e) avec succes", $insert_tag);
+    }
 });
 
 /**
- * Update one tag
- * url - /tags/:id
- * method - PUT
- * @params name
- */
+* Update one tag
+* url - /tags/:id
+* method - PUT
+* @params name
+*/
 $app->put('/tags/:id', 'authenticate', function($id) use ($app, $db, $logManager) {
-    verifyRequiredParams(array('name')); // vérifier les paramédtres requises
+    verifyRequiredParams(array('name')); // verifier les parametres requises
     global $user_connected;
 
-    //recupérer les valeurs POST
+    //recuperer les valeurs POST
     $request_params = json_decode($app->request()->getBody(), true);
     $name_tag = $request_params["name"];
 
@@ -118,14 +118,14 @@ $app->put('/tags/:id', 'authenticate', function($id) use ($app, $db, $logManager
         if($update_tag == FALSE)
         {
             $logManager->setLog($user_connected, (string)$tag, true);
-            echoResponse(400, false, "Oops! Une erreur est survenue lors de la mise à jour du tag", NULL);
+            echoResponse(400, false, "Oops! Une erreur est survenue lors de la mise a jour du tag", NULL);
         }
         else
-            if($update_tag != FALSE || is_array($update_tag))
-            {
-                $logManager->setLog($user_connected, (string)$tag, false);
-                echoResponse(201, true, "tag mis à jour avec succès", NULL);
-            }
+        if($update_tag != FALSE || is_array($update_tag))
+        {
+            $logManager->setLog($user_connected, (string)$tag, false);
+            echoResponse(201, true, "tag mis a jour avec succes", NULL);
+        }
     }
     else
     {
@@ -136,11 +136,11 @@ $app->put('/tags/:id', 'authenticate', function($id) use ($app, $db, $logManager
 });
 
 /**
- * Delete one tag
- * url - /tags/:id
- * method - DELETE
- * @params name
- */
+* Delete one tag
+* url - /tags/:id
+* method - DELETE
+* @params name
+*/
 $app->delete('/tags/:id', 'authenticate', function($id) use ($app, $db, $logManager) {
     $tag = $db->entityManager->tag[$id];
     global $user_connected;
@@ -150,12 +150,12 @@ $app->delete('/tags/:id', 'authenticate', function($id) use ($app, $db, $logMana
         if($tag && $tag->delete())
         {
             $logManager->setLog($user_connected, (string)$tag, false);
-            echoResponse(200, true, "tag id : $id supprimé avec succès", NULL);
+            echoResponse(200, true, "tag id : $id supprime avec succes", NULL);
         }
         else
         {
             $logManager->setLog($user_connected, (string)$tag, true);
-            echoResponse(200, false, "tag id : $id pas supprimé. Erreur !!", NULL);
+            echoResponse(200, false, "tag id : $id pas supprime. Erreur !!", NULL);
         }
     }
     else

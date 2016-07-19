@@ -16,13 +16,4 @@ require_once 'routes/route_tag.php';
 require_once 'routes/route_user.php';
 require_once 'routes/route_login_register.php';
 
-/*require_once 'routes_automatic_generated/route_application.php';
-require_once 'routes_automatic_generated/route_application_tag.php';
-require_once 'routes_automatic_generated/route_author.php';
-//require_once 'routes_automatic_generated/route_login_register_author.php';
-require_once 'routes_automatic_generated/route_tag.php';
-require_once 'routes_automatic_generated/route_user.php';
-//require_once 'routes_automatic_generated/route_login_register_user.php';
-require_once 'routes_automatic_generated/route_login_register.php'*/;
-
 $app->run();

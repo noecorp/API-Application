@@ -24,10 +24,10 @@ $logManager = new Log();
  * @params id_application, id_tags
  */
 $app->post('/application_tags/:id_application', 'authenticate', function($id_application) use ($app, $db, $logManager) {
-    verifyRequiredParams(array('tags_id')); // vÈrifier les paramÈtres requises
+    verifyRequiredParams(array('tags_id')); // v√©rifier les param√©tres requises
     global $user_connected;
 
-    //recupÈrer les valeurs POST
+    //recup√©rer les valeurs POST
     $request_params = json_decode($app->request()->getBody(), true);
 
     $inserted_tag = FALSE;
@@ -44,18 +44,18 @@ $app->post('/application_tags/:id_application', 'authenticate', function($id_app
         if($insert_application_tag != FALSE || is_array($insert_application_tag))
         {
             $inserted_tag = TRUE;
-            $logManager->setLog($user_connected, buildSqlQueryInsert("application_tag", $data), false); //application_tag insÈrÈe
+            $logManager->setLog($user_connected, buildSqlQueryInsert("application_tag", $data), false); //application_tag ins√©r√©e
         }
         else
         if($insert_application_tag == FALSE)
         {
             $inserted_tag = FALSE;
-            $logManager->setLog($user_connected, buildSqlQueryInsert("application_tag", $data), true); //application_tag non insÈrÈe
+            $logManager->setLog($user_connected, buildSqlQueryInsert("application_tag", $data), true); //application_tag non ins√©r√©e
         }
     }
 
     if($inserted_tag == TRUE)
-        echoResponse(201, true, "Tags ajoutes", NULL);
+        echoResponse(201, true, "tags ajoutes", NULL);
     else if($inserted_tag == FALSE)
         echoResponse(400, false, "Erreur ajout", NULL);
 });
