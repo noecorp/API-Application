@@ -123,18 +123,27 @@ $app->put('/applications/:id', 'authenticate', function($id) use ($app, $db, $lo
     $application = $db->entityManager->application[$id];
     if($application)
     {
-        $update_application = $application->update($request_params);
+        $testSameData = isSameData($application, $request_params);
 
-        if($update_application == FALSE)
-        {
-            $logManager->setLog($user_connected, (string)$application, true);
-            echoResponse(400, false, "Oops! Une erreur est survenue lors de la mise à jour du application", NULL);
-        }
-        else
-        if($update_application != FALSE || is_array($update_application))
+        if(!in_array("FALSE", $testSameData)) //c'est la même data, pas de changement
         {
             $logManager->setLog($user_connected, (string)$application, false);
             echoResponse(200, true, "Tag mis à jour avec succès. Id : $id", NULL);
+        }
+        else
+        {
+            $update_application = $application->update($request_params);
+            if($update_application == FALSE)
+            {
+                $logManager->setLog($user_connected, (string)$application, true);
+                echoResponse(400, false, "Oops! Une erreur est survenue lors de la mise à jour du application", NULL);
+            }
+            else
+            if($update_application != FALSE || is_array($update_application))
+            {
+                $logManager->setLog($user_connected, (string)$application, false);
+                echoResponse(200, true, "Tag mis à jour avec succès. Id : $id", NULL);
+            }
         }
     }
     else

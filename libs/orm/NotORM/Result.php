@@ -270,6 +270,7 @@ class NotORM_Result extends NotORM_Abstract implements Iterator, ArrayAccess, Co
 		if ($this->notORM->freeze) {
 			return false;
 		}
+
 		if (!$data) {
 			return 0;
 		}

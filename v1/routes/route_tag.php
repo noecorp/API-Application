@@ -113,18 +113,27 @@ $app->put('/tags/:id', 'authenticate', function($id) use ($app, $db, $logManager
     $tag = $db->entityManager->tag[$id];
     if($tag)
     {
-        $update_tag = $tag->update(array("name" => $name_tag));
+        $testSameData = isSameData($tag, $request_params);
 
-        if($update_tag == FALSE)
-        {
-            $logManager->setLog($user_connected, (string)$tag, true);
-            echoResponse(400, false, "Oops! Une erreur est survenue lors de la mise a jour du tag", NULL);
-        }
-        else
-        if($update_tag != FALSE || is_array($update_tag))
+        if(!in_array("FALSE", $testSameData)) //c'est la même data, pas de changement
         {
             $logManager->setLog($user_connected, (string)$tag, false);
-            echoResponse(201, true, "tag mis a jour avec succes", NULL);
+            echoResponse(200, true, "Tag mis à jour avec succès. Id : $id", NULL);
+        }
+        else
+        {
+            $update_tag = $tag->update(array("name" => $name_tag));
+            if($update_tag == FALSE)
+            {
+                $logManager->setLog($user_connected, (string)$tag, true);
+                echoResponse(400, false, "Oops! Une erreur est survenue lors de la mise a jour du tag", NULL);
+            }
+            else
+                if($update_tag != FALSE || is_array($update_tag))
+                {
+                    $logManager->setLog($user_connected, (string)$tag, false);
+                    echoResponse(201, true, "tag mis a jour avec succes", NULL);
+                }
         }
     }
     else

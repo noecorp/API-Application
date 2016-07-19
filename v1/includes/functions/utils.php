@@ -162,3 +162,23 @@ function buildSqlQueryInsert($nameTable, $values)
     return "INSERT INTO $nameTable VALUES($values_sql)";
 
 }
+
+/**
+ * Test if data are same when Update
+ * @param $table
+ * @param $requestParams
+ * @return array
+ */
+function isSameData($table, $requestParams)
+{
+    $testSameData = array();
+    foreach($table as $k => $v)
+    {
+        if($k == 'id') continue;
+        else
+            if($requestParams[$k] == $v) $testSameData[] = "TRUE";
+            else
+                $testSameData[] = "FALSE";
+    }
+    return $testSameData;
+}

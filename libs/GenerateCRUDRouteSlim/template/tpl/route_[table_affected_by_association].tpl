@@ -123,18 +123,28 @@ $app->put('/{$table_name}s/:id', 'authenticate', function($id) use ($app, $db, $
     ${$table_name} = $db->entityManager->{$table_name}[$id];
     if(${$table_name})
     {
-        $update_{$table_name} = ${$table_name}->update($request_params);
+        $testSameData = isSameData(${$table_name}, $request_params);
 
-        if($update_{$table_name} == FALSE)
-        {
-            $logManager->setLog($user_connected, (string)${$table_name}, true);
-            echoResponse(400, false, "Oops! Une erreur est survenue lors de la mise à jour du {$table_name}", NULL);
-        }
-        else
-        if($update_{$table_name} != FALSE || is_array($update_{$table_name}))
+        if(!in_array("FALSE", $testSameData)) //c'est la même data, pas de changement
         {
             $logManager->setLog($user_connected, (string)${$table_name}, false);
-            echoResponse(200, true, "Tag mis à jour avec succès. Id : $id", NULL);
+            echoResponse(200, true, "{$table_name} mis à jour avec succès. Id : $id", NULL);
+        }
+        else
+        {
+            $update_{$table_name} = ${$table_name}->update($request_params);
+
+            if($update_{$table_name} == FALSE)
+            {
+                $logManager->setLog($user_connected, (string)${$table_name}, true);
+                echoResponse(400, false, "Oops! Une erreur est survenue lors de la mise à jour du {$table_name}", NULL);
+            }
+            else
+            if($update_{$table_name} != FALSE || is_array($update_{$table_name}))
+            {
+                $logManager->setLog($user_connected, (string)${$table_name}, false);
+                echoResponse(200, true, "{$table_name} mis à jour avec succès. Id : $id", NULL);
+            }
         }
     }
     else
