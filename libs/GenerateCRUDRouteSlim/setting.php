@@ -49,6 +49,11 @@
                 </div>
 
                 <div class="md-form form-group">
+                    <i class="fa fa-lock prefix"></i>
+                    <input type="text" id="form92" class="form-control validate" placeholder="Version de l'api (ex: v1)" name="version">
+                </div>
+
+                <div class="md-form form-group">
                     <input type="submit" class="btn btn-default btn-lg" value="Setup">
                 </div>
 

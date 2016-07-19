@@ -9,6 +9,7 @@ $host = "";
 $user = "";
 $password = "";
 $databaseName = "";
+$version = "";
 
 if(isset($_POST["host"]) && isset($_POST["databaseName"]) && isset($_POST["user"]) && isset($_POST["pwd"]))
 {
@@ -16,6 +17,7 @@ if(isset($_POST["host"]) && isset($_POST["databaseName"]) && isset($_POST["user"
     $user           = $_POST["user"];
     $password       = $_POST["pwd"];
     $databaseName   = $_POST["databaseName"];
+    $version        = $_POST["version"];
 
     $fileConfig = dirname(dirname(__DIR__)) . '/libs/GenerateCRUDRouteSlim/template/class/dao/config.php';
 
@@ -27,6 +29,7 @@ if(isset($_POST["host"]) && isset($_POST["databaseName"]) && isset($_POST["user"
     fwrite($fileContent, 'define("DATABASE", "' . $databaseName . '");' . "\n");
     fwrite($fileContent, 'define("USER", "' . $user . '");' . "\n");
     fwrite($fileContent, 'define("PASSWORD", "' . $password . '");' . "\n");
+    fwrite($fileContent, 'define("WSVERSION", "' . $version . '");' . "\n");
 
     fclose($fileContent); ?>
 
@@ -60,7 +63,7 @@ if(isset($_POST["host"]) && isset($_POST["databaseName"]) && isset($_POST["user"
 
             <form class="form-inline" action="index.php" method="post">
                 <div class="md-form form-group">
-                    <input type="submit" class="btn btn-default btn-sm" value="Download source">
+                    <input type="submit" class="btn btn-default btn-sm" value="Generate route">
                 </div>
             </form>
 

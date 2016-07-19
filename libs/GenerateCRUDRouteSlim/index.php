@@ -8,7 +8,8 @@ require_once('template/class/dao/sql/ConnectionProperty.class.php');
 require_once('template/class/dao/sql/QueryExecutor.class.php');
 require_once('template/class/dao/sql/Transaction.class.php');
 require_once('template/class/dao/sql/SqlQuery.class.php');
-require_once "template/class/Template.php";
+require_once('template/class/Template.php');
+require_once('template/class/dao/config.php');
 
 /**
  * Run generate routes
@@ -31,24 +32,24 @@ function init()
     @mkdir("generated/routes");
     @mkdir("../../v1/routes_automatic_generated");
 
-    /** Auto generate v2 */
-    @mkdir("../../v2");
-    @mkdir("../../v2/routes");
-    @mkdir("../../v2/includes");
-    @mkdir("../../v2/includes/db_manager");
-    @mkdir("../../v2/includes/functions");
+    /** Auto generate ' . WSVERSION . ' */
+    @mkdir("../../" . WSVERSION);
+    @mkdir("../../" . WSVERSION . "/routes");
+    @mkdir("../../" . WSVERSION . "/includes");
+    @mkdir("../../" . WSVERSION . "/includes/db_manager");
+    @mkdir("../../" . WSVERSION . "/includes/functions");
 
-    copy("toInclude/includes/db_manager/dbManager.php", "../../v2/includes/db_manager/dbManager.php");
-    copy("toInclude/includes/functions/json.php", "../../v2/includes/functions/json.php");
-    copy("toInclude/includes/functions/security_api.php", "../../v2/includes/functions/security_api.php");
-    copy("toInclude/includes/functions/set_headers.php", "../../v2/includes/functions/set_headers.php");
-    copy("toInclude/includes/functions/utils.php", "../../v2/includes/functions/utils.php");
-    copy("toInclude/includes/Log.class.php", "../../v2/includes/Log.class.php");
-    copy("toInclude/includes/pass_hash.php", "../../v2/includes/pass_hash.php");
+    copy("toInclude/includes/db_manager/dbManager.php", "../../" . WSVERSION . "/includes/db_manager/dbManager.php");
+    copy("toInclude/includes/functions/json.php", "../../" . WSVERSION . "/includes/functions/json.php");
+    copy("toInclude/includes/functions/security_api.php", "../../" . WSVERSION . "/includes/functions/security_api.php");
+    copy("toInclude/includes/functions/set_headers.php", "../../" . WSVERSION . "/includes/functions/set_headers.php");
+    copy("toInclude/includes/functions/utils.php", "../../" . WSVERSION . "/includes/functions/utils.php");
+    copy("toInclude/includes/Log.class.php", "../../" . WSVERSION . "/includes/Log.class.php");
+    copy("toInclude/includes/pass_hash.php", "../../" . WSVERSION . "/includes/pass_hash.php");
 
 
-    copy("toInclude/.htaccess", "../../v2/.htaccess");
-    copy("toInclude/index.php", "../../v2/index.php");
+    copy("toInclude/.htaccess", "../../" . WSVERSION . "/.htaccess");
+    copy("toInclude/index.php", "../../" . WSVERSION . "/index.php");
 }
 
 /**
@@ -258,9 +259,9 @@ function generateAllRoutesFiles($ret)
             copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
             copy('generated/routes/route_login_register_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_login_register_'.$tableName.'.php');
 
-            //v2
-            copy('generated/routes/route_'.$tableName.'.php', '../../v2/routes/route_'.$tableName.'.php');
-            copy('generated/routes/route_login_register_'.$tableName.'.php', '../../v2/routes/route_login_register_'.$tableName.'.php');
+            //' . WSVERSION . '
+            copy('generated/routes/route_'.$tableName.'.php', '../../' . WSVERSION . '/routes/route_'.$tableName.'.php');
+            copy('generated/routes/route_login_register_'.$tableName.'.php', '../../' . WSVERSION . '/routes/route_login_register_'.$tableName.'.php');
         }
         else
             if(existInArray($list_table_affected_by_association, $tableName)) //si la table est en relation avec un autre
@@ -279,8 +280,8 @@ function generateAllRoutesFiles($ret)
 
                         copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
 
-                        //v2
-                        copy('generated/routes/route_'.$tableName.'.php', '../../v2/routes/route_'.$tableName.'.php');
+                        //' . WSVERSION . '
+                        copy('generated/routes/route_'.$tableName.'.php', '../../' . WSVERSION . '/routes/route_'.$tableName.'.php');
                     }
                 }
             }
@@ -298,8 +299,8 @@ function generateAllRoutesFiles($ret)
 
                     copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
 
-                    //v2
-                    copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes/route_'.$tableName.'.php');
+                    //' . WSVERSION . '
+                    copy('generated/routes/route_'.$tableName.'.php', '../../' . WSVERSION . '/routes/route_'.$tableName.'.php');
                 }
                 else
                     if(strpos($tableName, "_") === FALSE) //si c'est une table simple à màj (crud) tout simplement
@@ -313,8 +314,8 @@ function generateAllRoutesFiles($ret)
 
                         copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes_automatic_generated/route_'.$tableName.'.php');
 
-                        //v2
-                        copy('generated/routes/route_'.$tableName.'.php', '../../v1/routes/route_'.$tableName.'.php');
+                        //' . WSVERSION . '
+                        copy('generated/routes/route_'.$tableName.'.php', '../../' . WSVERSION . '/routes/route_'.$tableName.'.php');
                     }
     }
 
@@ -324,9 +325,9 @@ function generateAllRoutesFiles($ret)
     copy('generated/routes/route_login_register_author.php', 'generated/routes/route_login_register.php');
     copy('generated/routes/route_login_register_author.php', '../../v1/routes_automatic_generated/route_login_register.php');
 
-    //v2
+    //' . WSVERSION . '
     copy('generated/routes/route_login_register_author.php', 'generated/routes/route_login_register.php');
-    copy('generated/routes/route_login_register_author.php', '../../v2/routes/route_login_register.php');
+    copy('generated/routes/route_login_register_author.php', '../../' . WSVERSION . '/routes/route_login_register.php');
 
     /** FIN STATIC */
 
