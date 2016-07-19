@@ -57,7 +57,7 @@ $app->get('/{$table_name}s/:id', 'authenticate', function($id) use ($app, $db, $
     if(count(${$table_name}s) > 0)
     {
         $logManager->setLog($user_connected, (string)${$table_name}s, false);
-        echoResponse(200, true, "L'{$table_name} est retourné", ${$table_name}s);
+        echoResponse(200, true, "{$table_name} est retourné", ${$table_name}s);
     }
     else
     {
